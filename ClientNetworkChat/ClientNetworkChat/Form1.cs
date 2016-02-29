@@ -97,7 +97,7 @@ namespace ClientNetworkChat
                 }
                 catch(Exception ex)
                 {
-
+                    MessageBox.Show("Ошибка:" + ex.Message);
                 }
             }
         }
