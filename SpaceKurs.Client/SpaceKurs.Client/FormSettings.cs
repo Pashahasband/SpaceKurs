@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace SpaceKurs.Client
 {
-    public partial class Form2 : Form
+    public partial class FormSettings : Form
     {
-        public Form2()
+        public FormSettings()
         {
             InitializeComponent();
         }

@@ -1,6 +1,6 @@
 ﻿namespace SpaceKurs.Client
 {
-    partial class Form2
+    partial class FormSettings
     {
         /// <summary>
         /// Required designer variable.
