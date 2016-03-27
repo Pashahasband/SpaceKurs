@@ -19,7 +19,7 @@ namespace WinFormsClient
         /// </summary>
         private String UserName { get; set; }
         private IHubProxy HubProxy { get; set; }
-        const string ServerURI = "http://192.168.0.162:8080/signalr";
+        const string ServerURI = "http://192.168.0.195:8080/signalr";
         private HubConnection Connection { get; set; }
         
         internal WinFormsClient()

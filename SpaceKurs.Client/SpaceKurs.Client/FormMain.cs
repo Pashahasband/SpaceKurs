@@ -12,6 +12,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Microsoft.AspNet.SignalR.Client;
+
+using System.Net.Http;
+
 namespace SpaceKurs.Client
 {
     public partial class FormMain : Form
@@ -20,8 +24,64 @@ namespace SpaceKurs.Client
         private IPAddress ip = null;
         private int port = 0;
         private Thread th;
+        /// <summary>
+        /// This name is simply added to sent messages to identify the user; this 
+        /// sample does not include authentication.
+        /// </summary>
+        private String UserName { get; set; }
+        private IHubProxy HubProxy { get; set; }
+        const string ServerURI = "http://192.168.0.195:8080/signalr";
+        private HubConnection Connection { get; set; }
+        /// <summary>
+        /// Creates and connects the hub connection and hub proxy. This method
+        /// is called asynchronously from SignInButton_Click.
+        /// </summary>
+        private async void ConnectAsync()
+        {
+            Connection = new HubConnection(ServerURI);
+            Connection.Closed += Connection_Closed;
+            HubProxy = Connection.CreateHubProxy("MyHub");
+            //Handle incoming event from server: use Invoke to write to console from SignalR's thread
+            HubProxy.On<string, string>("AddMessage", (name, message) =>
+                this.Invoke((Action)(() =>
+                    RichTextBoxConsole.AppendText(String.Format("{0}: {1}" + Environment.NewLine, name, message))
+                ))
+            );
+            try
+            {
+                await Connection.Start();
+            }
+            catch (HttpRequestException)
+            {
+                StatusText.Text = "Unable to connect to server: Start server before connecting clients.";
+                //No connection: Don't enable Send button or show chat UI
+                return;
+            }
+
+            //Activate UI
+            SignInPanel.Visible = false;
+            ChatPanel.Visible = true;
+            ButtonSend.Enabled = true;
+            TextBoxMessage.Focus();
+            RichTextBoxConsole.AppendText("Connected to server at " + ServerURI + Environment.NewLine);
+        }
+
+        /// <summary>
+        /// If the server is stopped, the connection will time out after 30 seconds (default), and the 
+        /// Closed event will fire.
+        /// </summary>
+        private void Connection_Closed()
+        {
+            //Deactivate chat UI; show login UI. 
+            this.Invoke((Action)(() => ChatPanel.Visible = false));
+            this.Invoke((Action)(() => ButtonSend.Enabled = false));
+            this.Invoke((Action)(() => StatusText.Text = "You have been disconnected."));
+            this.Invoke((Action)(() => SignInPanel.Visible = true));
+        }
         public FormMain()
         {
+
+
             InitializeComponent();
             try
             {

@@ -19,7 +19,7 @@ namespace SignalRChat
     public partial class WinFormsServer : Form
     {
         private IDisposable SignalR { get; set; }
-        const string ServerURI = "http://192.168.0.194:8080";
+        const string ServerURI = "http://192.168.0.195:8080";
 
         internal WinFormsServer()
         {
@@ -57,9 +57,9 @@ namespace SignalRChat
             {
                 SignalR = WebApp.Start(ServerURI);
             }
-            catch (TargetInvocationException)
+            catch (TargetInvocationException e)
             {
-                WriteToConsole("Server failed to start. A server is already running on " + ServerURI);
+                WriteToConsole("Server failed to start. A server is already running on " + ServerURI + e);
                 //Re-enable button to let user try to start server again
                 this.Invoke((Action)(() => ButtonStart.Enabled = true));
                 return;
