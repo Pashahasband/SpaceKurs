@@ -23,12 +23,12 @@ namespace SpaceKurs.Server
 
 class Program
     {
-        private IDisposable SignalR { get; set; }
+        private static IDisposable SignalR { get; set; }
         /// <summary>
         /// Starts the server and checks for error thrown when another server is already 
         /// running. This method is called asynchronously from Button_Start.
         /// </summary>
-        private void StartServer()
+        private static void StartServer()
         {
 
             const string ServerURI = "http://192.168.0.195:8080";
@@ -81,10 +81,10 @@ class Program
             Console.WriteLine("Client connected: " + Context.ConnectionId);
             return base.OnConnected();
         }
-        public override Task OnDisconnected()
+        public override Task OnDisconnected(bool stopCalled)
         {
             Console.WriteLine("Client disconnected: " + Context.ConnectionId);
-            return base.OnDisconnected();
+            return base.OnDisconnected(stopCalled);
         }
     }
 

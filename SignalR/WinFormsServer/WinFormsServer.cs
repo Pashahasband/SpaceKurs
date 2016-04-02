@@ -93,6 +93,7 @@ namespace SignalRChat
             }
         }
     }
+
     /// <summary>
     /// Used by OWIN's startup process. 
     /// </summary>
