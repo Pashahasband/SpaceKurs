@@ -97,6 +97,11 @@ namespace SpaceKurs.Client
                 label1.Text = "Настройки: \n IP сервера: " + connect_info[0] + "\n Порт сервера:" + connect_info[1];
                 label1.Text = "Connecting to server...";
                 ConnectAsync(connect_info[0], connect_info[1].Replace("\r\n", string.Empty));
+                
+                this.WindowState = FormWindowState.Minimized;
+                this.ShowInTaskbar = false;
+                notifyIcon1.Visible = true;
+                this.Hide();
 
             }
             catch (Exception ex)
@@ -140,6 +145,24 @@ namespace SpaceKurs.Client
             {
                 Connection.Stop();
                 Connection.Dispose();
+            }
+        }
+        private void FormMain_Deactivate(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.ShowInTaskbar = false;
+                notifyIcon1.Visible = true;
+            }
+        }
+
+        private void notifyIcon1_Click(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.WindowState = FormWindowState.Normal;
+                this.ShowInTaskbar = true;
+                notifyIcon1.Visible = false;
             }
         }
     }

@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.менюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -36,6 +38,7 @@
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.обАвтореToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -103,6 +106,13 @@
             this.label1.Size = new System.Drawing.Size(0, 13);
             this.label1.TabIndex = 1;
             // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
+            this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -112,8 +122,9 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
-            this.Text = "Form1";
+            this.Text = "Главная форма приложения";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+            this.Resize += new System.EventHandler(this.FormMain_Deactivate);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -131,6 +142,7 @@
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem обАвтореToolStripMenuItem;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }
 
