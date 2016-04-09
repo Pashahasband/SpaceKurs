@@ -30,15 +30,15 @@ namespace SpaceKurs.Client
         /// </summary>
         private String UserName { get; set; }
         private IHubProxy HubProxy { get; set; }
-        const string ServerURI = "http://192.168.0.195:8080/signalr";
+        const string ServerURI = "http://192.168.0.198:8080/signalr";
         private HubConnection Connection { get; set; }
         /// <summary>
         /// Creates and connects the hub connection and hub proxy. This method
         /// is called asynchronously from SignInButton_Click.
         /// </summary>
-        private async void ConnectAsync()
+        private async void ConnectAsync(string IP, string PORT)
         {
-            Connection = new HubConnection(ServerURI);
+            Connection = new HubConnection("http://" + IP + ":" + PORT+ "/signalr");
             Connection.Closed += Connection_Closed;
             HubProxy = Connection.CreateHubProxy("MyHub");
             //Handle incoming event from server: use Invoke to write to console from SignalR's thread
@@ -64,6 +64,8 @@ namespace SpaceKurs.Client
             ButtonSend.Enabled = true;
             TextBoxMessage.Focus();
             RichTextBoxConsole.AppendText("Connected to server at " + ServerURI + Environment.NewLine);*/
+            label1.Text = "Connected to server at " + ServerURI + Environment.NewLine;
+
         }
 
         /// <summary>
@@ -93,6 +95,9 @@ namespace SpaceKurs.Client
                 port = int.Parse(connect_info[1]);
                 label1.ForeColor = Color.Green;
                 label1.Text = "Настройки: \n IP сервера: " + connect_info[0] + "\n Порт сервера:" + connect_info[1];
+                label1.Text = "Connecting to server...";
+                ConnectAsync(connect_info[0], connect_info[1].Replace("\r\n", string.Empty));
+
             }
             catch (Exception ex)
             {
@@ -116,12 +121,26 @@ namespace SpaceKurs.Client
             {
                 Client.Close();
             }
+            if (Connection != null)
+            {
+                Connection.Stop();
+                Connection.Dispose();
+            }
             Application.Exit();
         }
 
         private void обАвтореToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("By Pashahasband");
+        }
+
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Connection != null)
+            {
+                Connection.Stop();
+                Connection.Dispose();
+            }
         }
     }
 }

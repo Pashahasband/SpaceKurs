@@ -31,13 +31,13 @@ class Program
         private static void StartServer()
         {
 
-            const string ServerURI = "http://192.168.0.195:8080";
+            const string ServerURI = "http://192.168.0.198:8080";
 
             try
             {
                 SignalR = WebApp.Start(ServerURI);
             }
-            catch (TargetInvocationException)
+            catch (TargetInvocationException e)
             {
                 Console.WriteLine("Server failed to start. A server is already running on " + ServerURI);
                 //Re-enable button to let user try to start server again
@@ -49,8 +49,11 @@ class Program
         }
         static void Main(string[] args)
         {
+            
             Console.WriteLine("Starting server...");
-            StartServer();
+            Task.Run(() => StartServer());
+            //StartServer();
+            while (true) { }
         }
 
     }
