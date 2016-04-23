@@ -16,6 +16,7 @@ using Owin;
 using Microsoft.Owin.Cors;
 using Microsoft.Owin.Hosting;
 using System.Reflection;
+using System.Web.Http;
 
 
 namespace SpaceKurs.Server
@@ -66,6 +67,15 @@ class Program
         {
             app.UseCors(CorsOptions.AllowAll);
             app.MapSignalR();
+
+            HttpConfiguration config = new HttpConfiguration();
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+
+            app.UseWebApi(config);
         }
     }
     /// <summary>
