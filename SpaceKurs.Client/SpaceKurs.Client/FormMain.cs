@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.DirectX.AudioVideoPlayback;
 
 using Microsoft.AspNet.SignalR.Client;
 
@@ -24,6 +25,7 @@ namespace SpaceKurs.Client
         private IPAddress ip = null;
         private int port = 0;
         private Thread th;
+        Video video;
         /// <summary>
         /// This name is simply added to sent messages to identify the user; this 
         /// sample does not include authentication.
@@ -97,11 +99,17 @@ namespace SpaceKurs.Client
                 label1.Text = "Настройки: \n IP сервера: " + connect_info[0] + "\n Порт сервера:" + connect_info[1];
                 label1.Text = "Connecting to server...";
                 ConnectAsync(connect_info[0], connect_info[1].Replace("\r\n", string.Empty));
-                
+
+                OpenVideo();
+
+
                 this.WindowState = FormWindowState.Minimized;
                 this.ShowInTaskbar = false;
                 notifyIcon1.Visible = true;
                 this.Hide();
+
+                
+
 
             }
             catch (Exception ex)
@@ -153,6 +161,22 @@ namespace SpaceKurs.Client
             {
                 this.ShowInTaskbar = false;
                 notifyIcon1.Visible = true;
+            }
+        }
+        private void OpenVideo()
+        {
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = Application.StartupPath;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                int height = pictureBox1.Height;
+                int width = pictureBox1.Width;
+                video = new Video(openFileDialog.FileName);
+                video.Owner = pictureBox1;
+                pictureBox1.Width = width;
+                pictureBox1.Height = height;
+                video.Play();
+                video.Pause();
             }
         }
 

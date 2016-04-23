@@ -31,7 +31,7 @@ class Program
         private static void StartServer()
         {
 
-            const string ServerURI = "http://192.168.0.198:8080";
+            const string ServerURI = "http://192.168.0.200:8080";
 
             try
             {
