@@ -108,6 +108,9 @@
     <None Include="Scripts\jquery-2.2.3.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="lena.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\jquery-2.2.1.js" />
     <Content Include="Scripts\jquery-2.2.1.min.js" />
     <Content Include="Scripts\jquery-2.2.3.intellisense.js" />

@@ -39,9 +39,6 @@ class Program
             try
             {
                 SignalR = WebApp.Start(ServerURI);
-                var clint = new HttpClient();
-
-                //var res
             }
             catch (TargetInvocationException e)
             {
