@@ -17,6 +17,7 @@ using Microsoft.Owin.Cors;
 using Microsoft.Owin.Hosting;
 using System.Reflection;
 using System.Web.Http;
+using System.Net.Http;
 
 
 namespace SpaceKurs.Server
@@ -32,11 +33,15 @@ class Program
         private static void StartServer()
         {
 
-            const string ServerURI = "http://192.168.0.200:8080";
+            //const string ServerURI = "http://localhost:8080";
+            const string ServerURI = "http://192.168.0.171:8080";
 
             try
             {
                 SignalR = WebApp.Start(ServerURI);
+                var clint = new HttpClient();
+
+                //var res
             }
             catch (TargetInvocationException e)
             {
