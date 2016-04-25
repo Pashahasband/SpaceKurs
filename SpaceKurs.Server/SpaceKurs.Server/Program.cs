@@ -93,6 +93,50 @@ class Program
                 }
             }
         }
+
+        public static void BuildFolders(string dirPath)
+        {
+            string[] paths;
+            paths = Directory.GetDirectories(dirPath);
+            int temp = paths.GetLength(0);
+            for (int i = 0; i < temp; i++)
+            {
+                paths[i] = paths[i].Replace(dirPath, "");
+            }
+        }
+        public static void BuildFiles(string dirPath)
+        {
+            string[] paths;
+            paths = Directory.GetFiles(dirPath);
+            int temp = paths.GetLength(0);
+            for (int i = 0; i < temp; i++)
+            {
+                paths[i] = paths[i].Replace(dirPath, "");
+            }
+        }
+
+        private static void TextChanged()
+        {
+            
+            string dirPath = "C:\\";
+            try
+            {
+                bool invalid = true;
+                for (int i = 0; i < dirPath.Length; i++)
+                {
+                    if (dirPath[i] == '\\') invalid = false;
+                }
+                if (invalid) throw new Exception();
+                BuildFolders(dirPath);
+                BuildFiles(dirPath);
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine("{0} is not a valid file or directory.", dirPath);
+            }
+
+        }
+
         static void Main(string[] args)
         {
             
@@ -100,8 +144,8 @@ class Program
             Task.Run(() => StartServer());
             //StartServer();
 
-            RecursiveFileProcessor(args);
-
+            //RecursiveFileProcessor(args);
+            TextChanged();
             while (true) { }
 
             
