@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,7 +35,7 @@ class Program
         {
 
             //const string ServerURI = "http://localhost:8080";
-            const string ServerURI = "http://192.168.0.171:8080";
+            const string ServerURI = "http://192.168.0.203:8080";
 
             try
             {
@@ -50,13 +51,60 @@ class Program
             //this.Invoke((Action)(() => ButtonStop.Enabled = true));
             Console.WriteLine("Server started at " + ServerURI);
         }
+
+        // Process all files in the directory passed in, recurse on any directories 
+        // that are found, and process the files they contain.
+        public static void ProcessDirectory(string targetDirectory)
+        {
+            // Process the list of files found in the directory.
+            string[] fileEntries = Directory.GetFiles(targetDirectory);
+            foreach (string fileName in fileEntries)
+                ProcessFile(fileName);
+
+            // Recurse into subdirectories of this directory.
+            string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
+            foreach (string subdirectory in subdirectoryEntries)
+                ProcessDirectory(subdirectory);
+        }
+
+        // Insert logic for processing found files here.
+        public static void ProcessFile(string path)
+        {
+            Console.WriteLine("Processed file '{0}'.", path);
+        }
+
+        public static void RecursiveFileProcessor(string[] args)
+        {
+            foreach (string path in args)
+            {
+                if (File.Exists(path))
+                {
+                    // This path is a file
+                    ProcessFile(path);
+                }
+                else if (Directory.Exists(path))
+                {
+                    // This path is a directory
+                    ProcessDirectory(path);
+                }
+                else
+                {
+                    Console.WriteLine("{0} is not a valid file or directory.", path);
+                }
+            }
+        }
         static void Main(string[] args)
         {
             
             Console.WriteLine("Starting server...");
             Task.Run(() => StartServer());
             //StartServer();
+
+            RecursiveFileProcessor(args);
+
             while (true) { }
+
+            
         }
 
     }
