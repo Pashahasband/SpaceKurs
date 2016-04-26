@@ -1,32 +1,24 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Xml.Serialization;
-using System.Diagnostics;
-using System.Threading;
-
-using Microsoft.AspNet.SignalR;
-using Owin;
-using Microsoft.Owin.Cors;
-using Microsoft.Owin.Hosting;
-using System.Reflection;
-using System.Web.Http;
-using System.Net.Http;
-
-
-namespace SpaceKurs.Server
+﻿namespace SpaceKurs.Server
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+    using System.Threading.Tasks;
+    using System.Web.Http;
 
-class Program
+    using Microsoft.AspNet.SignalR;
+    using Microsoft.Owin.Cors;
+    using Microsoft.Owin.Hosting;
+
+    using Owin;
+
+    class Program
     {
         private static IDisposable SignalR { get; set; }
+
+        public static IList<string> Images { get; private set; }
+
         /// <summary>
         /// Starts the server and checks for error thrown when another server is already 
         /// running. This method is called asynchronously from Button_Start.
@@ -34,22 +26,23 @@ class Program
         private static void StartServer()
         {
 
-            //const string ServerURI = "http://localhost:8080";
-            const string ServerURI = "http://192.168.0.203:8080";
+            //const string ServerUri = "http://localhost:8080";
+            const string ServerUri = "http://192.168.0.203:8080";
 
             try
             {
-                SignalR = WebApp.Start(ServerURI);
+                //TODO Наверное, тут надо распарсить наличие фоточек, до старта ВебАппа. YНапример в Images (см. выше)
+                SignalR = WebApp.Start(ServerUri);
             }
             catch (TargetInvocationException e)
             {
-                Console.WriteLine("Server failed to start. A server is already running on " + ServerURI);
+                Console.WriteLine("Server failed to start. A server is already running on " + ServerUri);
                 //Re-enable button to let user try to start server again
                 //this.Invoke((Action)(() => ButtonStart.Enabled = true));
                 return;
             }
             //this.Invoke((Action)(() => ButtonStop.Enabled = true));
-            Console.WriteLine("Server started at " + ServerURI);
+            Console.WriteLine("Server started at " + ServerUri);
         }
 
         // Process all files in the directory passed in, recurse on any directories 
@@ -94,57 +87,24 @@ class Program
             }
         }
 
-        public static void BuildFolders(string dirPath)
+        public static IList<string> GetFolderList(string dirPath)
         {
-            string[] paths;
-            paths = Directory.GetDirectories(dirPath);
-            int temp = paths.GetLength(0);
-            for (int i = 0; i < temp; i++)
-            {
-                paths[i] = paths[i].Replace(dirPath, "");
-            }
+            var paths = Directory.GetDirectories(dirPath);
+            return new List<string>(paths);
         }
-        public static void BuildFiles(string dirPath)//, string[]filesto, int tempfiles)
+        public static IList<string> GetFiles(string dirPath)//, string[]filesto, int tempfiles)
         {
-            string[] paths;
-            paths = Directory.GetFiles(dirPath);
-            int temp = paths.GetLength(0);
-            for (int i = 0; i < temp; i++)
-            {
-                paths[i] = paths[i].Replace(dirPath, "");
-            }
+            var paths = Directory.GetFiles(dirPath);
+            return new List<string>(paths);
         }
 
         private static void TextChanged()
         {
             
             string dirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
-            
-            try
-            {
-                bool invalid = true;
-                for (int i = 0; i < dirPath.Length; i++)
-                {
-                    if (dirPath[i] == '\\') invalid = false;
-                }
-                if (invalid) throw new Exception();
-                
-                string[] paths;
-                paths = Directory.GetFiles(dirPath);
-                int temp = paths.GetLength(0);
-                IDictionary<int, string> filesphotos = new Dictionary<int, string>(temp);
 
-                for (int i = 1; i < temp+1; i++)
-                {
-                    filesphotos.Add(i, paths[i-1]);
-                }
-
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine("{0} is not a valid file or directory.", dirPath);
-            }
-
+            //хз, что с этим дальше делать =)
+            var imagePaths = GetFiles(dirPath);
         }
 
         static void Main(string[] args)
