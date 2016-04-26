@@ -104,7 +104,7 @@ class Program
                 paths[i] = paths[i].Replace(dirPath, "");
             }
         }
-        public static void BuildFiles(string dirPath)
+        public static void BuildFiles(string dirPath)//, string[]filesto, int tempfiles)
         {
             string[] paths;
             paths = Directory.GetFiles(dirPath);
@@ -118,7 +118,8 @@ class Program
         private static void TextChanged()
         {
             
-            string dirPath = "C:\\";
+            string dirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
+            
             try
             {
                 bool invalid = true;
@@ -127,8 +128,17 @@ class Program
                     if (dirPath[i] == '\\') invalid = false;
                 }
                 if (invalid) throw new Exception();
-                BuildFolders(dirPath);
-                BuildFiles(dirPath);
+                
+                string[] paths;
+                paths = Directory.GetFiles(dirPath);
+                int temp = paths.GetLength(0);
+                IDictionary<int, string> filesphotos = new Dictionary<int, string>(temp);
+
+                for (int i = 1; i < temp+1; i++)
+                {
+                    filesphotos.Add(i, paths[i-1]);
+                }
+
             }
             catch (System.Exception ex)
             {
@@ -145,6 +155,9 @@ class Program
             //StartServer();
 
             //RecursiveFileProcessor(args);
+            
+
+
             TextChanged();
             while (true) { }
 
