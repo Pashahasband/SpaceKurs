@@ -31,7 +31,8 @@
 
             try
             {
-                //TODO Наверное, тут надо распарсить наличие фоточек, до старта ВебАппа. YНапример в Images (см. выше)
+                //TODO Наверное, тут надо распарсить наличие фоточек, до старта ВебАппа. Например в Images (см. выше)
+
                 SignalR = WebApp.Start(ServerUri);
             }
             catch (TargetInvocationException e)
@@ -45,54 +46,13 @@
             Console.WriteLine("Server started at " + ServerUri);
         }
 
-        // Process all files in the directory passed in, recurse on any directories 
-        // that are found, and process the files they contain.
-        public static void ProcessDirectory(string targetDirectory)
-        {
-            // Process the list of files found in the directory.
-            string[] fileEntries = Directory.GetFiles(targetDirectory);
-            foreach (string fileName in fileEntries)
-                ProcessFile(fileName);
-
-            // Recurse into subdirectories of this directory.
-            string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
-            foreach (string subdirectory in subdirectoryEntries)
-                ProcessDirectory(subdirectory);
-        }
-
-        // Insert logic for processing found files here.
-        public static void ProcessFile(string path)
-        {
-            Console.WriteLine("Processed file '{0}'.", path);
-        }
-
-        public static void RecursiveFileProcessor(string[] args)
-        {
-            foreach (string path in args)
-            {
-                if (File.Exists(path))
-                {
-                    // This path is a file
-                    ProcessFile(path);
-                }
-                else if (Directory.Exists(path))
-                {
-                    // This path is a directory
-                    ProcessDirectory(path);
-                }
-                else
-                {
-                    Console.WriteLine("{0} is not a valid file or directory.", path);
-                }
-            }
-        }
 
         public static IList<string> GetFolderList(string dirPath)
         {
             var paths = Directory.GetDirectories(dirPath);
             return new List<string>(paths);
         }
-        public static IList<string> GetFiles(string dirPath)//, string[]filesto, int tempfiles)
+        public static IList<string> GetFiles(string dirPath)
         {
             var paths = Directory.GetFiles(dirPath);
             return new List<string>(paths);
@@ -105,6 +65,34 @@
 
             //хз, что с этим дальше делать =)
             var imagePaths = GetFiles(dirPath);
+
+            if ((Images == null || Images.Count == 0) && (imagePaths.Count > 0))
+            {
+                Images = new List<string>(imagePaths);
+                Console.WriteLine("First start....");
+            }
+            
+            if (Images.Count != imagePaths.Count )
+            {
+                for (int j = 0; j < imagePaths.Count; j++)
+                {
+                    if (!Images.Contains(imagePaths[j]))
+                    {
+                        Console.WriteLine("Find new file... ...." + imagePaths[j]);
+                        Images.Add(imagePaths[j]);
+                    }
+
+
+                }
+                if (Images.Count > imagePaths.Count)
+                {
+                    Console.WriteLine("File deleted... ....");
+                    Images.Clear();
+                }
+                    
+
+            }
+
         }
 
         static void Main(string[] args)
@@ -114,12 +102,8 @@
             Task.Run(() => StartServer());
             //StartServer();
 
-            //RecursiveFileProcessor(args);
             
-
-
-            TextChanged();
-            while (true) { }
+            while (true) { TextChanged(); }
 
             
         }
