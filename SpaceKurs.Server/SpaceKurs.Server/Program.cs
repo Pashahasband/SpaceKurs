@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Web.Http;
@@ -71,27 +72,42 @@
                 Images = new List<string>(imagePaths);
                 Console.WriteLine("First start....");
             }
-            
-            if (Images.Count != imagePaths.Count )
+            else
             {
-                for (int j = 0; j < imagePaths.Count; j++)
+                var addedImages = imagePaths.Where(ip => !Images.Contains(ip));
+                var deletedImages = Images.Where(i => !imagePaths.Contains(i));
+
+                foreach (var addedImage in addedImages)
                 {
-                    if (!Images.Contains(imagePaths[j]))
-                    {
-                        Console.WriteLine("Find new file... ...." + imagePaths[j]);
-                        Images.Add(imagePaths[j]);
-                    }
-
-
+                    Console.WriteLine("New file was found: {0}", addedImage);
+                    Images.Add(addedImage); 
                 }
-                if (Images.Count > imagePaths.Count)
+
+                //TODO Список неудобен тем, что нельзя просто так взять и удалить, так как тогда все индексы сдвинуться. 
+                //А тут вдруг какой-нибудь тормоз может проснуться и затребовать картиночку.
+                foreach (var deletedImage in deletedImages)
                 {
-                    Console.WriteLine("File deleted... ....");
-                    Images.Clear();
+                    Console.WriteLine("This file was removed: {0}", deletedImage);
+                    Images[Images.IndexOf(deletedImage)] = null;
                 }
-                    
-
             }
+            
+            //if (Images.Count != imagePaths.Count )
+            //{
+            //    for (int j = 0; j < imagePaths.Count; j++)
+            //    {
+            //        if (!Images.Contains(imagePaths[j]))
+            //        {
+            //            Console.WriteLine("Find new file... ...." + imagePaths[j]);
+            //            Images.Add(imagePaths[j]);
+            //        }
+            //    }
+            //    if (Images.Count > imagePaths.Count)
+            //    {
+            //        Console.WriteLine("File deleted... ....");
+            //        Images.Clear();
+            //    }
+            //}
 
         }
 
