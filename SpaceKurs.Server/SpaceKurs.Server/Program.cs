@@ -16,6 +16,7 @@
 
     class Program
     {
+        static string dirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
         private static IDisposable SignalR { get; set; }
 
         public static IList<string> Images { get; private set; }
@@ -64,8 +65,6 @@
         private static void TextChanged()
         {
             
-            string dirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
-
             //Почему так?
             //var imagePaths = GetFiles(dirPath);
 
@@ -111,7 +110,8 @@
             Console.WriteLine("Starting server...");
             Task.Run(() => StartServer());
             //StartServer();
-
+            ImageRegistry.Initialize(Directory.GetFiles(dirPath));
+            //    Console.WriteLine("First start....");
             while (true)
             {
                 TextChanged();
