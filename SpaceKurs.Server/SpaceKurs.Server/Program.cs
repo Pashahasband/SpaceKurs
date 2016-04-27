@@ -20,6 +20,8 @@
 
         public static IList<string> Images { get; private set; }
 
+
+
         /// <summary>
         /// Starts the server and checks for error thrown when another server is already 
         /// running. This method is called asynchronously from Button_Start.
@@ -64,7 +66,6 @@
             
             string dirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
 
-            //хз, что с этим дальше делать =)
             var imagePaths = GetFiles(dirPath);
 
             if ((Images == null || Images.Count == 0) && (imagePaths.Count > 0))
@@ -74,13 +75,25 @@
             }
             else
             {
-                var addedImages = imagePaths.Where(ip => !Images.Contains(ip));
-                var deletedImages = Images.Where(i => !imagePaths.Contains(i));
+                var addedImages = imagePaths.Where(ip => !Images.Contains(ip)).ToList();
+                var deletedImages = Images.Where(i => i != null && !imagePaths.Contains(i)).ToList();
 
                 foreach (var addedImage in addedImages)
                 {
                     Console.WriteLine("New file was found: {0}", addedImage);
-                    Images.Add(addedImage); 
+                    Images.Add(addedImage);
+                    // разослать всем
+
+                    /* Type myType = typeof(MyHub);
+
+                     Console.WriteLine(myType.ToString());
+                     Console.ReadLine();*/
+                    MethodInfo mInfo;
+
+                    // Get MethodA(int i, int i)
+                    mInfo = typeof(MyHub).GetMethod("Send");
+                    Console.WriteLine("Found method: {0}", mInfo);
+
                 }
 
                 //TODO Список неудобен тем, что нельзя просто так взять и удалить, так как тогда все индексы сдвинуться. 
@@ -91,24 +104,6 @@
                     Images[Images.IndexOf(deletedImage)] = null;
                 }
             }
-            
-            //if (Images.Count != imagePaths.Count )
-            //{
-            //    for (int j = 0; j < imagePaths.Count; j++)
-            //    {
-            //        if (!Images.Contains(imagePaths[j]))
-            //        {
-            //            Console.WriteLine("Find new file... ...." + imagePaths[j]);
-            //            Images.Add(imagePaths[j]);
-            //        }
-            //    }
-            //    if (Images.Count > imagePaths.Count)
-            //    {
-            //        Console.WriteLine("File deleted... ....");
-            //        Images.Clear();
-            //    }
-            //}
-
         }
 
         static void Main(string[] args)
@@ -118,7 +113,6 @@
             Task.Run(() => StartServer());
             //StartServer();
 
-            
             while (true) { TextChanged(); }
 
             
@@ -152,6 +146,8 @@
     /// </summary>
     public class MyHub : Hub
     {
+        //static List<User> Users = new List<User>();
+
         public void Send(string name, string message)
         {
             Clients.All.addMessage(name, message);
