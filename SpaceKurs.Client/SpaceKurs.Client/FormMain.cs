@@ -1,35 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Microsoft.DirectX.AudioVideoPlayback;
-
-using Microsoft.AspNet.SignalR.Client;
-
-using System.Net.Http;
-
-namespace SpaceKurs.Client
+﻿namespace SpaceKurs.Client
 {
+    using System;
+    using System.Drawing;
+    using System.IO;
+    using System.Net;
+    using System.Net.Http;
+    using System.Net.Sockets;
+    using System.Threading;
+    using System.Windows.Forms;
+
+    using Microsoft.AspNet.SignalR.Client;
+
     public partial class FormMain : Form
     {
         static private Socket Client;
         private IPAddress ip = null;
         private int port = 0;
         private Thread th;
-        Video video;
+        //Video video;
         /// <summary>
         /// This name is simply added to sent messages to identify the user; this 
         /// sample does not include authentication.
         /// </summary>
+        /// 
         private String UserName { get; set; }
         private IHubProxy HubProxy { get; set; }
         //const string ServerURI = "http://192.168.0.198:8080/signalr";
@@ -49,6 +42,17 @@ namespace SpaceKurs.Client
                     RichTextBoxConsole.AppendText(String.Format("{0}: {1}" + Environment.NewLine, name, message))
                 ))
             );*/
+
+            HubProxy.On<Guid>(
+                "OnNewImageReceived",
+                (id) => this.Invoke(
+                    (Action)(() =>
+                    {
+                        //TODO Вот тут должна быть обработка оповещения о новой картиночке
+                        //1. Надо сделать метод, который будет скачивать превьюшечку и оповещать об этом.
+                        //2. Повесить куда-нибудь загрузку всей картинки, когда будет получен апрув
+                        //3. 
+                    })));
             try
             {
                 await Connection.Start();
@@ -165,22 +169,22 @@ namespace SpaceKurs.Client
                 notifyIcon1.Visible = true;
             }
         }
-        private void OpenVideo()
-        {
-            var openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = Application.StartupPath;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                int height = pictureBox1.Height;
-                int width = pictureBox1.Width;
-                video = new Video(openFileDialog.FileName);
-                video.Owner = pictureBox1;
-                pictureBox1.Width = width;
-                pictureBox1.Height = height;
-                video.Play();
-                video.Pause();
-            }
-        }
+        //private void OpenVideo()
+        //{
+        //    var openFileDialog = new OpenFileDialog();
+        //    openFileDialog.InitialDirectory = Application.StartupPath;
+        //    if (openFileDialog.ShowDialog() == DialogResult.OK)
+        //    {
+        //        int height = pictureBox1.Height;
+        //        int width = pictureBox1.Width;
+        //        video = new Video(openFileDialog.FileName);
+        //        video.Owner = pictureBox1;
+        //        pictureBox1.Width = width;
+        //        pictureBox1.Height = height;
+        //        video.Play();
+        //        video.Pause();
+        //    }
+        //}
 
         private void notifyIcon1_Click(object sender, EventArgs e)
         {
