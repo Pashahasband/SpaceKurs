@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
+
 namespace ClassLibraryImageDecoder
 {
-            /** forward transform scaling coefficients */
-        static double h0, h1, h2, h3;
-        /** forward transform wave coefficients */
-        static double g0, g1, g2, g3;
-
-        static double Ih0, Ih1, Ih2, Ih3;
-        static double Ig0, Ig1, Ig2, Ig3;
-       static void transformDobes( double[] a, int n )
+            
+      static void transformDobes( double[] a, int n, double h0, double h1, double h2, double h3, double g0, double g1, double g2, double g3)
    {
       if (n >= 4) {
          int i, j;
@@ -37,7 +37,7 @@ namespace ClassLibraryImageDecoder
    } // transform
 
 
-   static void invTransformDobes( double[] a, int n )
+   static void invTransformDobes( double[] a, int n , double Ih0, double Ih1, double Ih2, double Ih3, double Ig0, double Ig1, double Ig2, double Ig3)
    {
       if (n >= 4) {
         int i, j;
@@ -87,9 +87,15 @@ namespace ClassLibraryImageDecoder
             double[] rValues = new double[bmp.Width * bmp.Height];
             double[] gValues = new double[bmp.Width * bmp.Height];
             double[] bValues = new double[bmp.Width * bmp.Height];
+        /** forward transform scaling coefficients */
+         double h0, h1, h2, h3;
+        /** forward transform wave coefficients */
+         double g0, g1, g2, g3;
 
+         double Ih0, Ih1, Ih2, Ih3;
+         double Ig0, Ig1, Ig2, Ig3;
 
-            double sqrt_3 = Math.Sqrt(3);
+        double sqrt_3 = Math.Sqrt(3);
             double denom = 4 * Math.Sqrt(2);
 
             //
