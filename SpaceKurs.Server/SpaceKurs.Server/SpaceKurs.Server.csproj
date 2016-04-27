@@ -97,6 +97,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BroadcastService.cs" />
+    <Compile Include="ImageInfo.cs" />
+    <Compile Include="ImageRegistry.cs" />
     <Compile Include="ImagesController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -20,7 +20,7 @@
 
         public static IList<string> Images { get; private set; }
 
-
+        private static readonly BroadcastService BroadcastService = new BroadcastService();
 
         /// <summary>
         /// Starts the server and checks for error thrown when another server is already 
@@ -66,43 +66,42 @@
             
             string dirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
 
-            var imagePaths = GetFiles(dirPath);
+            //Почему так?
+            //var imagePaths = GetFiles(dirPath);
 
-            if ((Images == null || Images.Count == 0) && (imagePaths.Count > 0))
+            //if ((Images == null || Images.Count == 0) && (imagePaths.Count > 0))
+            //{
+            //    Images = new List<string>(imagePaths);
+            //    Console.WriteLine("First start....");
+            //}
+            //else
+            //{
+            //    var addedImages = imagePaths.Where(ip => !Images.Contains(ip)).ToList();
+            //    var deletedImages = Images.Where(i => i != null && !imagePaths.Contains(i)).ToList();
+
+            //    var broadcastService = addedImages.Any() 
+            //        ? new BroadcastService()
+            //        : null;
+            //    foreach (var addedImage in addedImages)
+            //    {
+            //        Console.WriteLine("New file was found: {0}", addedImage);
+            //        Images.Add(addedImage);
+            //        broadcastService.SendNewImageNotification(Images.IndexOf(addedImage));
+            //    }
+
+            //    //TODO Список неудобен тем, что нельзя просто так взять и удалить, так как тогда все индексы сдвинуться. 
+            //    //А тут вдруг какой-нибудь тормоз может проснуться и затребовать картиночку.
+            //    foreach (var deletedImage in deletedImages)
+            //    {
+            //        Console.WriteLine("This file was removed: {0}", deletedImage);
+            //        Images[Images.IndexOf(deletedImage)] = null;
+            //    }
+            //}
+
+            var addedImages = ImageRegistry.Update(Directory.GetFiles(dirPath));
+            foreach (var addedImage in addedImages)
             {
-                Images = new List<string>(imagePaths);
-                Console.WriteLine("First start....");
-            }
-            else
-            {
-                var addedImages = imagePaths.Where(ip => !Images.Contains(ip)).ToList();
-                var deletedImages = Images.Where(i => i != null && !imagePaths.Contains(i)).ToList();
-
-                foreach (var addedImage in addedImages)
-                {
-                    Console.WriteLine("New file was found: {0}", addedImage);
-                    Images.Add(addedImage);
-                    // разослать всем
-
-                    /* Type myType = typeof(MyHub);
-
-                     Console.WriteLine(myType.ToString());
-                     Console.ReadLine();*/
-                    MethodInfo mInfo;
-
-                    // Get MethodA(int i, int i)
-                    mInfo = typeof(MyHub).GetMethod("Send");
-                    Console.WriteLine("Found method: {0}", mInfo);
-
-                }
-
-                //TODO Список неудобен тем, что нельзя просто так взять и удалить, так как тогда все индексы сдвинуться. 
-                //А тут вдруг какой-нибудь тормоз может проснуться и затребовать картиночку.
-                foreach (var deletedImage in deletedImages)
-                {
-                    Console.WriteLine("This file was removed: {0}", deletedImage);
-                    Images[Images.IndexOf(deletedImage)] = null;
-                }
+                BroadcastService.SendNewImageNotification(addedImage.Id);
             }
         }
 
@@ -113,7 +112,10 @@
             Task.Run(() => StartServer());
             //StartServer();
 
-            while (true) { TextChanged(); }
+            while (true)
+            {
+                TextChanged();
+            }
 
             
         }
@@ -152,6 +154,7 @@
         {
             Clients.All.addMessage(name, message);
         }
+
         public override Task OnConnected()
         {
             Console.WriteLine("Client connected: " + Context.ConnectionId);
