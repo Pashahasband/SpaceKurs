@@ -32,7 +32,7 @@ namespace SpaceKurs.Client
         /// </summary>
         private String UserName { get; set; }
         private IHubProxy HubProxy { get; set; }
-        const string ServerURI = "http://192.168.0.198:8080/signalr";
+        //const string ServerURI = "http://192.168.0.198:8080/signalr";
         private HubConnection Connection { get; set; }
         /// <summary>
         /// Creates and connects the hub connection and hub proxy. This method
@@ -66,7 +66,7 @@ namespace SpaceKurs.Client
             ButtonSend.Enabled = true;
             TextBoxMessage.Focus();
             RichTextBoxConsole.AppendText("Connected to server at " + ServerURI + Environment.NewLine);*/
-            label1.Text = "Connected to server at " + ServerURI + Environment.NewLine;
+            label1.Text = "Connected to server at " + IP + ":" + PORT + Environment.NewLine;
 
         }
 
@@ -100,7 +100,8 @@ namespace SpaceKurs.Client
                 label1.Text = "Connecting to server...";
                 ConnectAsync(connect_info[0], connect_info[1].Replace("\r\n", string.Empty));
 
-                OpenVideo();
+
+               // OpenVideo();
 
 
                 this.WindowState = FormWindowState.Minimized;
@@ -108,8 +109,9 @@ namespace SpaceKurs.Client
                 notifyIcon1.Visible = true;
                 this.Hide();
 
-                
-
+                //очистить картинку
+                pictureBox1.Image = null;
+                //pictureBox1.Load(@"Client_info/lena.jpg");
 
             }
             catch (Exception ex)
