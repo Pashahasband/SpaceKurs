@@ -50,28 +50,7 @@ namespace TestImageGray
 
         }
 
-
-        static void HaarTransform(ref double[] array, int SIZE)
-        {
-            double[] avg = new double[SIZE];    // Суммы
-            double[] diff = new double[SIZE];   // Разности
-
-            for (int count = SIZE; count > 1; count /= 2)
-            {
-                for (int i = 0; i < count / 2; i++)
-                {
-                    avg[i] = (array[2 * i] + array[2 * i + 1]) / 2;
-                    diff[i] = array[2 * i] - avg[i];
-                }
-
-                for (int i = 0; i < count / 2; i++)
-                {
-                    array[i] = avg[i];
-                    array[i + count / 2] = diff[i];
-                }
-            }
-        }
-        static void transformDobes( double[] a, int n )
+   static void transformDobes( double[] a, int n )
    {
       if (n >= 4) {
          int i, j;
@@ -94,53 +73,9 @@ namespace TestImageGray
          }
       }
    } // transform
-        static void TransformRow(ref double[,] data, int row, int SIZE)
-        {
-            double[] rowdata = new double[SIZE];
-            int i;
 
-            for (i = 0; i < SIZE; i++)
-                rowdata[i] = data[row, i];
 
-            HaarTransform(ref rowdata, SIZE);
-
-            for (i = 0; i < SIZE; i++)
-                data[row, i] = rowdata[i];
-        }
-
-        static void TransformColumn(ref double[,] data, int col, int SIZE)
-        {
-            double[] coldata = new double[SIZE];
-            int i;
-
-            for (i = 0; i < SIZE; i++)
-                coldata[i] = data[i, col];
-
-            HaarTransform(ref coldata, SIZE);
-
-            for (i = 0; i < SIZE; i++)
-                data[i, col] = coldata[i];
-        }
-        static void HaarTransformInverse(ref double[] array, int SIZE)
-        {
-            //int SIZE = array.GetLength(0);
-
-            double[] tmp = new double[SIZE];
-            int i, count;
-
-            for (count = 2; count <= SIZE; count *= 2)
-            {
-                for (i = 0; i < count / 2; i++)
-                {
-                    tmp[2 * i] = array[i] + array[i + count / 2];
-                    tmp[2 * i + 1] = array[i] - array[i + count / 2];
-                }
-
-                for (i = 0; i < count; i++) array[i] = tmp[i];
-            }
-        }
-
-         static void invTransformDobes( double[] a, int n )
+   static void invTransformDobes( double[] a, int n )
    {
       if (n >= 4) {
         int i, j;
@@ -164,36 +99,7 @@ namespace TestImageGray
       }
    }
 
-        static void TransformColumnInverse(ref double[,] data, int col, int SIZE)
-        {
-            //int SIZE = data.GetLength(0);
-            double[] coldata = new double[SIZE];
-            int i;
-
-            for (i = 0; i < SIZE; i++)
-                coldata[i] = data[i, col];
-
-            HaarTransformInverse(ref coldata, SIZE);
-
-            for (i = 0; i < SIZE; i++)
-                data[i, col] = coldata[i];
-        }
-
-        static void TransformRowInverse(ref double[,] data, int row, int SIZE)
-        {
-            //int SIZE = data.GetLength(0);
-
-            double[] rowdata = new double[SIZE];
-            int i;
-
-            for (i = 0; i < SIZE; i++)
-                rowdata[i] = data[row, i];
-
-            HaarTransformInverse(ref rowdata, SIZE);
-
-            for (i = 0; i < SIZE; i++)
-                data[row, i] = rowdata[i];
-        }
+       
         private void MakeGray(Bitmap bmp)
         {
             // Задаём формат Пикселя.
@@ -216,18 +122,11 @@ namespace TestImageGray
             int kWidth = 0;
             int kHeight = 0;
             byte[] rgbValues = new byte[numBytes];
-            byte[] rgbValuesnew = new byte[numBytes/4];
             double[] rValues = new double[bmp.Width * bmp.Height];
             double[] gValues = new double[bmp.Width * bmp.Height];
             double[] bValues = new double[bmp.Width * bmp.Height];
-            double[] rValuesnew = new double[bmp.Width * bmp.Height/4];
-            double[] gValuesnew = new double[bmp.Width * bmp.Height/4];
-            double[] bValuesnew = new double[bmp.Width * bmp.Height/4];
 
-            //double[,] masr = new double[bmp.Height, bmp.Width];
-            //double[,] masg = new double[bmp.Height, bmp.Width];
-            //double[,] masb = new double[bmp.Height, bmp.Width];
-            //double[,] mascolor = new double[bmp.Height, bmpData.Stride];
+
             double sqrt_3 = Math.Sqrt(3);
             double denom = 4 * Math.Sqrt(2);
 
@@ -259,24 +158,7 @@ namespace TestImageGray
 
             Marshal.Copy(ptr, rgbValues, 0, numBytes);
 
-            
 
-            // Перебираем пикселы по 3 байта на каждый и меняем значения
-            /*for (int counter = 0; counter < rgbValues.Length; counter += 3)
-            {
-                
-                int value = rgbValues[counter] + rgbValues[counter + 1] + rgbValues[counter + 2];
-                byte color_b = 0;        
-
-                color_b = Convert.ToByte(value / 3);
-
-                
-                rgbValues[counter] = color_b;
-                rgbValues[counter + 1] = color_b;
-                rgbValues[counter + 2] = color_b;
-
-            }
-            */
             for (int counter = 0; counter < bmp.Width * bmp.Height; counter += 1)
             {
                 rValues[counter] = rgbValues[counter*3];
@@ -322,59 +204,7 @@ namespace TestImageGray
                     }
                 }
             }
-           /* for (int Height = 0; Height < bmp.Height; Height += 1)             
-            {
-                for (int Width = 0; Width < bmp.Width; Width += 1)              
-                {
-                    masr[Height, Width] = rgbValues[(Width + (Height * bmp.Width)) * 3];
-                    masg[Height, Width] = rgbValues[(Width + (Height * bmp.Width)) * 3 + 1];
-                    masb[Height, Width] = rgbValues[(Width + (Height * bmp.Width)) * 3 + 2];
-                }
-            }
-            // Применить преобразование к строкам...
-            for (int i = 0; i < bmp.Height; i++)
-            {
-                TransformRow(ref masr, i, bmp.Width);
-                TransformRow(ref masg, i, bmp.Width);
-                TransformRow(ref masb, i, bmp.Width);
-            }
-            // ...и столбцам.
-            for (int i = 0; i < bmp.Width; i++)
-            {
-                TransformColumn(ref masr, i, bmp.Height);
-                TransformColumn(ref masg, i, bmp.Height);
-                TransformColumn(ref masb, i, bmp.Height);
-            }
 
-            for (int Height = 0; Height < bmp.Height; Height += 1)
-            {
-                for (int Width = 0; Width < bmp.Width; Width += 1)
-                {
-                    if (Math.Abs(masr[Height,Width]) < 0.05)
-                        masr[Height, Width] = 0;
-                    if (Math.Abs(masg[Height, Width]) < 0.05)
-                        masg[Height, Width] = 0;
-                    if (Math.Abs(masb[Height, Width]) < 0.05)
-                        masb[Height, Width] = 0;
-                }
-            }
-
-            // Применить преобразование к строкам...
-            for (int i = 0; i < bmp.Width; i++)
-            {
-                TransformColumnInverse(ref masr, i, bmp.Height);
-                TransformColumnInverse(ref masg, i, bmp.Height);
-                TransformColumnInverse(ref masb, i, bmp.Height);
-            }
-
-            // ...и столбцам.
-            for (int i = 0; i < bmp.Height; i++)
-            {
-                TransformRowInverse(ref masr, i, bmp.Width);
-                TransformRowInverse(ref masg, i, bmp.Width);
-                TransformRowInverse(ref masb, i, bmp.Width);
-            }
-            */
 
             for (int n = kWidth * kHeight; n >= 4; n >>= 1)
             {
@@ -421,124 +251,8 @@ namespace TestImageGray
                 rgbValues[counter * 3 + 2] = Convert.ToByte(bValues[counter]);
             }
 
-            /*for (int n = bmp.Width * bmp.Height; n >= 4; n >>= 1)
-            {
-                transformDobes(rValues, n);
-                transformDobes(gValues, n);
-                transformDobes(bValues, n);
-            }
-
-            for (int counter = 0; counter < bmp.Width * bmp.Height; counter += 1)
-            {
-                if (Math.Abs(rValues[counter]) < 0.05)
-                    rValues[counter] = 0;
-                if (Math.Abs(gValues[counter]) < 0.05)
-                    gValues[counter] = 0;
-                if (Math.Abs(bValues[counter]) < 0.05)
-                    bValues[counter] = 0;
-            }
-
-            for (int n = 4; n <= bmp.Width * bmp.Height; n <<= 1)
-            {
-                invTransformDobes(rValues, n);
-                invTransformDobes(gValues, n);
-                invTransformDobes(bValues, n);
-            }
-
-            for (int counter = 0; counter < bmp.Width * bmp.Height; counter += 1)
-            {
-                rgbValues[counter * 3] = Convert.ToByte(rValues[counter]);
-                rgbValues[counter * 3 + 1] = Convert.ToByte(gValues[counter]);
-                rgbValues[counter * 3 + 2] = Convert.ToByte(bValues[counter]);
-            } */
-            
-            /*for (int Height = 0; Height < bmp.Height; Height += 1)
-            {
-                for (int Width = 0; Width < bmp.Width; Width += 1)
-                {
-                    rgbValues[(Width + (Height * bmp.Width)) * 3] = Convert.ToByte(masr[Height,Width]);
-                    rgbValues[(Width + (Height * bmp.Width)) * 3 + 1] = Convert.ToByte(masg[Height, Width]);
-                    rgbValues[(Width + (Height * bmp.Width)) * 3 + 2] = Convert.ToByte(masb[Height, Width]);
-                }
-            }
-
-            /*
-            for (int counter = 0; counter < rValuesnew.Length; counter += 1)
-            {
-
-                double value = rValues[counter * 4] + rValues[counter * 4 + 1] + rValues[counter * 4 + 2] + rValues[counter * 4 + 3];
-                byte color_b = 0;
-                color_b = Convert.ToByte(value / 4);
-                rValuesnew[counter] = color_b;
-                value = gValues[counter * 4] + gValues[counter * 4 + 1] + gValues[counter * 4 + 2] + gValues[counter * 4 + 3];
-                color_b = 0;
-                color_b = Convert.ToByte(value / 4);
-                gValuesnew[counter] = color_b;
-                value = bValues[counter * 4] + bValues[counter * 4 + 1] + bValues[counter * 4 + 2] + bValues[counter * 4 + 3];
-                color_b = 0;
-                color_b = Convert.ToByte(value / 4);
-                bValuesnew[counter] = color_b;
-            }
-            for (int counter = 0; counter < rValuesnew.Length; counter += 1)
-            {
-                rgbValuesnew[counter * 3] = Convert.ToByte(rValuesnew[counter]);
-                rgbValuesnew[counter * 3 + 1] = Convert.ToByte(gValuesnew[counter]);
-                rgbValuesnew[counter * 3 + 2] = Convert.ToByte(bValuesnew[counter]);
-            }
-            */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-           /* for (int Height = 0; Height < bmp.Height; Height += 1)
-            {
-                for (int Stride = 0; Stride < bmpData.Stride; Stride += 1)
-                {
-                    mascolor[Height, Stride] = rgbValues[Stride + (Height * bmpData.Stride)];
-                }
-            }
-
-            // Применить преобразование к строкам...
-            for (int i = 0; i < bmp.Height; i++)
-                TransformRow(ref mascolor, i, bmpData.Stride);
-            // ...и столбцам.
-            for (int i = 0; i < bmpData.Stride; i++)
-                TransformColumn(ref mascolor, i, bmp.Height);
-
-
-            for (int Height = 0; Height < bmp.Height; Height += 1)
-            {
-                for (int Stride = 0; Stride < bmpData.Stride; Stride += 1)
-                {
-                    if (Math.Abs(mascolor[Height, Stride]) < 0.05)
-                        mascolor[Height, Stride] = 0;
-                }
-            }
-
-            // ...и столбцам.
-            for (int i = 0; i < bmp.Height; i++)
-                TransformRowInverse(ref mascolor, i, bmpData.Stride);
-            // Применить преобразование к строкам...
-            for (int i = 0; i < bmpData.Stride; i++)
-                TransformColumnInverse(ref mascolor, i, bmp.Height);
-
-
-
-            for (int Height = 0; Height < bmp.Height; Height += 1)
-            {
-                for (int Stride = 0; Stride < bmpData.Stride; Stride += 1)
-                {
-                    if (mascolor[Height, Stride] >= 0 && mascolor[Height, Stride] <= 256)
-                        rgbValues[Stride + (Height * bmpData.Stride)] = Convert.ToByte(mascolor[Height, Stride]);
-                    if (mascolor[Height, Stride] < 0)
-                        rgbValues[Stride + (Height * bmpData.Stride)] = Convert.ToByte(mascolor[Height, Stride] + 128);
-                    if (mascolor[Height, Stride] > 256)
-                        rgbValues[Stride + (Height * bmpData.Stride)] = Convert.ToByte(mascolor[Height, Stride] - 128);
-                }
-            } 
-
-            */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Копируем набор данных обратно в изображение
             Marshal.Copy(rgbValues, 0, ptr, numBytes);
-           // Marshal.Copy(rgbValuesnew, 0, ptr, numBytes/4);
             // Разблокируем набор данных изображения в памяти.
             bmp.UnlockBits(bmpData);
         }
