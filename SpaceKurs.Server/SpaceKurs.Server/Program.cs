@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Web.Http;
@@ -13,17 +12,18 @@
     using Microsoft.Owin.Hosting;
 
     using Owin;
-    using ImageDecoder;
+
     class Program
     {
-        static string dirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
-        private static IDisposable SignalR { get; set; }
+        //private const string DirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
+        private const string DirPath = "C:\\Sites\\Images\\";
 
-        public static IList<string> Images { get; private set; }
+        private static IDisposable SignalR { get; set; }
 
         private static readonly BroadcastService BroadcastService = new BroadcastService();
 
-        private static ImageDecoder ImageDecoder = new ImageDecoder();
+        private static readonly ImageDecoderService ImageDecoderService = new ImageDecoderService();
+
         /// <summary>
         /// Starts the server and checks for error thrown when another server is already 
         /// running. This method is called asynchronously from Button_Start.
@@ -65,43 +65,11 @@
 
         private static void TextChanged()
         {
-            
-            //Почему так?
-            //var imagePaths = GetFiles(dirPath);
-
-            //if ((Images == null || Images.Count == 0) && (imagePaths.Count > 0))
-            //{
-            //    Images = new List<string>(imagePaths);
-            //    Console.WriteLine("First start....");
-            //}
-            //else
-            //{
-            //    var addedImages = imagePaths.Where(ip => !Images.Contains(ip)).ToList();
-            //    var deletedImages = Images.Where(i => i != null && !imagePaths.Contains(i)).ToList();
-
-            //    var broadcastService = addedImages.Any() 
-            //        ? new BroadcastService()
-            //        : null;
-            //    foreach (var addedImage in addedImages)
-            //    {
-            //        Console.WriteLine("New file was found: {0}", addedImage);
-            //        Images.Add(addedImage);
-            //        broadcastService.SendNewImageNotification(Images.IndexOf(addedImage));
-            //    }
-
-            //    //TODO Список неудобен тем, что нельзя просто так взять и удалить, так как тогда все индексы сдвинуться. 
-            //    //А тут вдруг какой-нибудь тормоз может проснуться и затребовать картиночку.
-            //    foreach (var deletedImage in deletedImages)
-            //    {
-            //        Console.WriteLine("This file was removed: {0}", deletedImage);
-            //        Images[Images.IndexOf(deletedImage)] = null;
-            //    }
-            //}
-
-            var addedImages = ImageRegistry.Update(Directory.GetFiles(dirPath));
+            var addedImages = ImageRegistry.Update(Directory.GetFiles(DirPath));
             foreach (var addedImage in addedImages)
             {
-               // ImageDecoder.MakeGray();
+                var previewPath = ImageDecoderService.EncodeImage(addedImage.ImagePath);
+                addedImage.PreviewPath = previewPath;
                 BroadcastService.SendNewImageNotification(addedImage.Id);
             }
         }
@@ -112,7 +80,7 @@
             Console.WriteLine("Starting server...");
             Task.Run(() => StartServer());
             //StartServer();
-            ImageRegistry.Initialize(Directory.GetFiles(dirPath));
+            ImageRegistry.Initialize(Directory.GetFiles(DirPath));
             //    Console.WriteLine("First start....");
             while (true)
             {
