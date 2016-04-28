@@ -13,7 +13,7 @@
     using Microsoft.Owin.Hosting;
 
     using Owin;
-
+    using ImageDecoder;
     class Program
     {
         static string dirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
@@ -23,6 +23,7 @@
 
         private static readonly BroadcastService BroadcastService = new BroadcastService();
 
+        private static ImageDecoder ImageDecoder = new ImageDecoder();
         /// <summary>
         /// Starts the server and checks for error thrown when another server is already 
         /// running. This method is called asynchronously from Button_Start.
@@ -100,6 +101,7 @@
             var addedImages = ImageRegistry.Update(Directory.GetFiles(dirPath));
             foreach (var addedImage in addedImages)
             {
+               // ImageDecoder.MakeGray();
                 BroadcastService.SendNewImageNotification(addedImage.Id);
             }
         }

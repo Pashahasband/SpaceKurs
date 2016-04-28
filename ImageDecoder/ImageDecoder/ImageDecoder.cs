@@ -7,7 +7,7 @@
 
     public class ImageDecoder
     {
-        static void TransformDobes(double[] a, int n, double h0, double h1, double h2, double h3, double g0, double g1, double g2, double g3)
+        static void TransformDobes(ref double[] a, int n, double h0, double h1, double h2, double h3, double g0, double g1, double g2, double g3)
         {
             if (n >= 4)
             {
@@ -34,8 +34,7 @@
             }
         } // transform
 
-
-        static void InvTransformDobes(double[] a, int n, double Ih0, double Ih1, double Ih2, double Ih3, double Ig0, double Ig1, double Ig2, double Ig3)
+        static void InvTransformDobes(ref double[] a, int n, double Ih0, double Ih1, double Ih2, double Ih3, double Ig0, double Ig1, double Ig2, double Ig3)
         {
             if (n >= 4)
             {
@@ -62,8 +61,7 @@
             }
         }
 
-
-        private void MakeGray(Bitmap bmp)
+        public void MakeGray(Bitmap bmp)
         {
             // Задаём формат Пикселя.
             PixelFormat pxf = PixelFormat.Format24bppRgb;
@@ -177,9 +175,9 @@
 
             for (int n = kWidth * kHeight; n >= 4; n >>= 1)
             {
-                TransformDobes(rValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
-                TransformDobes(gValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
-                TransformDobes(bValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                TransformDobes(ref rValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                TransformDobes(ref gValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                TransformDobes(ref bValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
             }
 
             for (int counter = 0; counter < kWidth * kHeight; counter += 1)
@@ -194,9 +192,9 @@
 
             for (int n = 4; n <= kWidth * kHeight; n <<= 1)
             {
-                InvTransformDobes(rValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
-                InvTransformDobes(gValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
-                InvTransformDobes(bValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                InvTransformDobes(ref rValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                InvTransformDobes(ref gValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                InvTransformDobes(ref bValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
             }
 
             for (int Height = 0; Height < kHeight; Height += 1)
