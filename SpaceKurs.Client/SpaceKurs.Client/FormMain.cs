@@ -18,6 +18,9 @@
         private IPAddress ip = null;
         private int port = 0;
         private Thread th;
+        static Guid idimage;
+        static string ipimage;
+        static string portimage;
         private WebClient webClient = new WebClient();
         //Video video;
         /// <summary>
@@ -54,10 +57,13 @@
                         //1. Надо сделать метод, который будет скачивать превьюшечку и оповещать об этом.
                         //HttpClient webClient = new HttpClient();
                         //WebClient webClient = new WebClient();
+                        idimage = id;
+                        ipimage = IP;
+                        portimage = PORT;
                         this.webClient.DownloadFileCompleted += this.FileDownloadComplete;
                         // pictureBox1 = webClient.Get("http://" + IP + ":" + PORT + "/api/images");
                         var imageUri = new Uri(string.Format("http://{0}:{1}/api/previews/{2}", IP, PORT, id));
-                        this.webClient.DownloadFileAsync(imageUri, "DownloadedImage.jpg");
+                        this.webClient.DownloadFileAsync(imageUri, id + ".jpg");
 
                         //2. Повесить куда-нибудь загрузку всей картинки, когда будет получен апрув
 
@@ -207,14 +213,15 @@
         private void FileDownloadComplete(object sender, AsyncCompletedEventArgs e)
         {
             //Открываем файл картинки...
-            var img = Image.FromFile("DownloadedImage.jpg");
+            var img = Image.FromFile(idimage + ".jpg");
             //Помещаем исходное изображение в PictureBox1
             pictureBox1.Image = img;
 
             label1.Text = "Появилось новое изображение, хотите ли вы скачать его себе на ПК?";
             buttonyes.Visible = true;
             buttonno.Visible = true;
-            MessageBox.Show("Download comleted");
+            notifyIcon1_Click(sender,e);
+            //MessageBox.Show("Download comleted");
         }
 
         private void notifyIcon1_Click(object sender, EventArgs e)
@@ -223,8 +230,47 @@
             {
                 this.WindowState = FormWindowState.Normal;
                 this.ShowInTaskbar = true;
-                notifyIcon1.Visible = false;
+                notifyIcon1.Visible = true;
             }
+        }
+
+        private void buttonyes_Click(object sender, EventArgs e)
+        {
+
+            //this.webClient.DownloadFileCompleted += this.FileDownloadComplete;
+            // pictureBox1 = webClient.Get("http://" + IP + ":" + PORT + "/api/images");
+            var imageUri = new Uri(string.Format("http://{0}:{1}/api/images/{2}", ipimage, portimage, idimage));
+             this.webClient.DownloadFileAsync(imageUri, "DownloadedNEWImage.jpg");
+
+
+
+            
+            pictureBox1.Image = null;
+            label1.Text = string.Format("Connected to server at {0}:{1}{2}", ipimage, portimage, Environment.NewLine);
+            buttonyes.Visible = false;
+            buttonno.Visible = false;
+            this.WindowState = FormWindowState.Minimized;
+            this.ShowInTaskbar = false;
+            //System.IO.File.Delete("DownloadedImage.jpg");
+            //notifyIcon1.Visible = true;
+            //this.Hide();
+
+        }
+
+        private void buttonno_Click(object sender, EventArgs e)
+        {
+            
+            pictureBox1.Image = null;
+            label1.Text = string.Format("Connected to server at {0}:{1}{2}", ipimage, portimage, Environment.NewLine);
+            buttonyes.Visible = false;
+            buttonno.Visible = false;
+            this.WindowState = FormWindowState.Minimized;
+            this.ShowInTaskbar = false;
+            //System.IO.File.Delete("DownloadedImage.jpg");
+            // notifyIcon1.Visible = true;
+            //this.Hide();
+
+
         }
     }
 }
