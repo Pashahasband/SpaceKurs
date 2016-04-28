@@ -14,10 +14,8 @@
         public HttpResponseMessage Get()
         {
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            using (var fileStream = new FileStream("lena.jpg", FileMode.Open, FileAccess.Read))
-            {
-                response.Content = new StreamContent(fileStream);
-            }
+            var fileStream = new FileStream("lena.jpg", FileMode.Open, FileAccess.Read);
+            response.Content = new StreamContent(fileStream);
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
             {
                 FileName = "lena.jpg"
@@ -39,10 +37,8 @@
             }
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            using (var fileStream = new FileStream(imageInfo.PreviewPath, FileMode.Open, FileAccess.Read))
-            {
-                response.Content = new StreamContent(fileStream);
-            }
+            var fileStream = new FileStream(imageInfo.PreviewPath, FileMode.Open, FileAccess.Read);
+            response.Content = new StreamContent(fileStream);
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
             {
                 FileName = string.Format("{0}.jpg", id),

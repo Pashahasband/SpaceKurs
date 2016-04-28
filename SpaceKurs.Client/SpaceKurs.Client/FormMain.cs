@@ -1,6 +1,7 @@
 ﻿namespace SpaceKurs.Client
 {
     using System;
+    using System.ComponentModel;
     using System.Drawing;
     using System.IO;
     using System.Net;
@@ -17,7 +18,7 @@
         private IPAddress ip = null;
         private int port = 0;
         private Thread th;
-        WebClient dwprewie = new WebClient();
+        private WebClient webClient = new WebClient();
         //Video video;
         /// <summary>
         /// This name is simply added to sent messages to identify the user; this 
@@ -51,22 +52,12 @@
                     {
                         //TODO Вот тут должна быть обработка оповещения о новой картиночке
                         //1. Надо сделать метод, который будет скачивать превьюшечку и оповещать об этом.
-                        //HttpClient dwprewie = new HttpClient();
-                        //WebClient dwprewie = new WebClient();
-                        dwprewie.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(FileDownloadComplete);
-                        // pictureBox1 = dwprewie.Get("http://" + IP + ":" + PORT + "/api/images");
-                        Uri imageuri = new Uri("http://" + IP + ":" + PORT + "/api/images");
-                        dwprewie.DownloadFileAsync(imageuri, "MyDownloadOmage.png");
-                        //Открываем файл картинки...
-                        System.IO.FileStream fs = new System.IO.FileStream("MyDownloadOmage.png", System.IO.FileMode.Open);
-                        System.Drawing.Image img = System.Drawing.Image.FromStream(fs);
-                        fs.Close();
-                        //Помещаем исходное изображение в PictureBox1
-                        pictureBox1.Image = img;
-                        
-                        label1.Text = "Появилось новое изображение, хотите ли вы скачать его себе на ПК?";
-                        buttonyes.Visible = true;
-                        buttonno.Visible = true;
+                        //HttpClient webClient = new HttpClient();
+                        //WebClient webClient = new WebClient();
+                        this.webClient.DownloadFileCompleted += this.FileDownloadComplete;
+                        // pictureBox1 = webClient.Get("http://" + IP + ":" + PORT + "/api/images");
+                        var imageUri = new Uri(string.Format("http://{0}:{1}/api/previews/{2}", IP, PORT, id));
+                        this.webClient.DownloadFileAsync(imageUri, "DownloadedImage.jpg");
 
                         //2. Повесить куда-нибудь загрузку всей картинки, когда будет получен апрув
 
@@ -89,7 +80,7 @@
             ButtonSend.Enabled = true;
             TextBoxMessage.Focus();
             RichTextBoxConsole.AppendText("Connected to server at " + ServerURI + Environment.NewLine);*/
-            label1.Text = "Connected to server at " + IP + ":" + PORT + Environment.NewLine;
+            label1.Text = string.Format("Connected to server at {0}:{1}{2}", IP, PORT, Environment.NewLine);
 
         }
 
@@ -100,10 +91,10 @@
         private void Connection_Closed()
         {
             //Deactivate chat UI; show login UI. 
-           /* this.Invoke((Action)(() => ChatPanel.Visible = false));
-            this.Invoke((Action)(() => ButtonSend.Enabled = false));
-            this.Invoke((Action)(() => StatusText.Text = "You have been disconnected."));
-            this.Invoke((Action)(() => SignInPanel.Visible = true));*/
+            /* this.Invoke((Action)(() => ChatPanel.Visible = false));
+             this.Invoke((Action)(() => ButtonSend.Enabled = false));
+             this.Invoke((Action)(() => StatusText.Text = "You have been disconnected."));
+             this.Invoke((Action)(() => SignInPanel.Visible = true));*/
         }
         public FormMain()
         {
@@ -112,11 +103,12 @@
             InitializeComponent();
             try
             {
+                //TODO Такое использование стримов просто ппц и рано или поздно приведёт к большим неприятностям
                 var sr = new StreamReader(@"Client_info/data_info.txt");
                 string buffer = sr.ReadToEnd();
                 sr.Close();
                 string[] connect_info = buffer.Split(':');
-                
+
                 buttonyes.Visible = false;
                 buttonno.Visible = false;
                 ip = IPAddress.Parse(connect_info[0]);
@@ -127,7 +119,7 @@
                 ConnectAsync(connect_info[0], connect_info[1].Replace("\r\n", string.Empty));
 
 
-               // OpenVideo();
+                // OpenVideo();
 
 
                 this.WindowState = FormWindowState.Minimized;
@@ -212,8 +204,16 @@
          {
              MessageBox.Show("Download comleted");
          }*/
-        private void FileDownloadComplete(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        private void FileDownloadComplete(object sender, AsyncCompletedEventArgs e)
         {
+            //Открываем файл картинки...
+            var img = Image.FromFile("DownloadedImage.jpg");
+            //Помещаем исходное изображение в PictureBox1
+            pictureBox1.Image = img;
+
+            label1.Text = "Появилось новое изображение, хотите ли вы скачать его себе на ПК?";
+            buttonyes.Visible = true;
+            buttonno.Visible = true;
             MessageBox.Show("Download comleted");
         }
 
