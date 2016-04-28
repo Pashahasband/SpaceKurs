@@ -177,9 +177,9 @@
 
             for (int n = kWidth * kHeight; n >= 4; n >>= 1)
             {
-                TransformDobes(rValuesk, n);
-                TransformDobes(gValuesk, n);
-                TransformDobes(bValuesk, n);
+                TransformDobes(rValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                TransformDobes(gValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                TransformDobes(bValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
             }
 
             for (int counter = 0; counter < kWidth * kHeight; counter += 1)
@@ -194,9 +194,9 @@
 
             for (int n = 4; n <= kWidth * kHeight; n <<= 1)
             {
-                InvTransformDobes(rValuesk, n);
-                InvTransformDobes(gValuesk, n);
-                InvTransformDobes(bValuesk, n);
+                InvTransformDobes(rValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                InvTransformDobes(gValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                InvTransformDobes(bValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
             }
 
             for (int Height = 0; Height < kHeight; Height += 1)
