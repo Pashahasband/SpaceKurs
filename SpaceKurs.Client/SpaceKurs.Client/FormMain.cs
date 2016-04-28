@@ -17,6 +17,7 @@
         private IPAddress ip = null;
         private int port = 0;
         private Thread th;
+        WebClient dwprewie = new WebClient();
         //Video video;
         /// <summary>
         /// This name is simply added to sent messages to identify the user; this 
@@ -50,7 +51,25 @@
                     {
                         //TODO Вот тут должна быть обработка оповещения о новой картиночке
                         //1. Надо сделать метод, который будет скачивать превьюшечку и оповещать об этом.
+                        //HttpClient dwprewie = new HttpClient();
+                        //WebClient dwprewie = new WebClient();
+                        dwprewie.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(FileDownloadComplete);
+                        // pictureBox1 = dwprewie.Get("http://" + IP + ":" + PORT + "/api/images");
+                        Uri imageuri = new Uri("http://" + IP + ":" + PORT + "/api/images");
+                        dwprewie.DownloadFileAsync(imageuri, "MyDownloadOmage.png");
+                        //Открываем файл картинки...
+                        System.IO.FileStream fs = new System.IO.FileStream("MyDownloadOmage.png", System.IO.FileMode.Open);
+                        System.Drawing.Image img = System.Drawing.Image.FromStream(fs);
+                        fs.Close();
+                        //Помещаем исходное изображение в PictureBox1
+                        pictureBox1.Image = img;
+                        
+                        label1.Text = "Появилось новое изображение, хотите ли вы скачать его себе на ПК?";
+                        buttonyes.Visible = true;
+                        buttonno.Visible = true;
+
                         //2. Повесить куда-нибудь загрузку всей картинки, когда будет получен апрув
+
                         //3. 
                     })));
             try
@@ -97,6 +116,9 @@
                 string buffer = sr.ReadToEnd();
                 sr.Close();
                 string[] connect_info = buffer.Split(':');
+                
+                buttonyes.Visible = false;
+                buttonno.Visible = false;
                 ip = IPAddress.Parse(connect_info[0]);
                 port = int.Parse(connect_info[1]);
                 label1.ForeColor = Color.Green;
@@ -185,6 +207,15 @@
         //        video.Pause();
         //    }
         //}
+
+        /* private void FileDownloadComplete(object sender, AsyncCompletedEventArgs e)
+         {
+             MessageBox.Show("Download comleted");
+         }*/
+        private void FileDownloadComplete(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            MessageBox.Show("Download comleted");
+        }
 
         private void notifyIcon1_Click(object sender, EventArgs e)
         {

@@ -40,6 +40,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.buttonyes = new System.Windows.Forms.Button();
+            this.buttonno = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -123,11 +125,31 @@
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             // 
+            // buttonyes
+            // 
+            this.buttonyes.Location = new System.Drawing.Point(55, 340);
+            this.buttonyes.Name = "buttonyes";
+            this.buttonyes.Size = new System.Drawing.Size(75, 23);
+            this.buttonyes.TabIndex = 3;
+            this.buttonyes.Text = "Да";
+            this.buttonyes.UseVisualStyleBackColor = true;
+            // 
+            // buttonno
+            // 
+            this.buttonno.Location = new System.Drawing.Point(175, 340);
+            this.buttonno.Name = "buttonno";
+            this.buttonno.Size = new System.Drawing.Size(75, 23);
+            this.buttonno.TabIndex = 4;
+            this.buttonno.Text = "Нет";
+            this.buttonno.UseVisualStyleBackColor = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1060, 351);
+            this.ClientSize = new System.Drawing.Size(1060, 375);
+            this.Controls.Add(this.buttonno);
+            this.Controls.Add(this.buttonyes);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
@@ -156,6 +178,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button buttonyes;
+        private System.Windows.Forms.Button buttonno;
     }
 }
 

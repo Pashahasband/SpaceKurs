@@ -15,8 +15,8 @@
 
     class Program
     {
-        //private const string DirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
-        private const string DirPath = "C:\\Sites\\Images\\";
+        private const string DirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
+        //private const string DirPath = "C:\\Sites\\Images\\";
 
         private static IDisposable SignalR { get; set; }
 
@@ -81,7 +81,7 @@
             Task.Run(() => StartServer());
             //StartServer();
             ImageRegistry.Initialize(Directory.GetFiles(DirPath));
-            //    Console.WriteLine("First start....");
+                Console.WriteLine("First start....");
             while (true)
             {
                 TextChanged();
