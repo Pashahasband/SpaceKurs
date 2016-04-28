@@ -1,67 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-
-namespace ClassLibraryImageDecoder
+﻿namespace ImageDecoder
 {
-            
-      static void transformDobes( double[] a, int n, double h0, double h1, double h2, double h3, double g0, double g1, double g2, double g3)
-   {
-      if (n >= 4) {
-         int i, j;
-         int half = n >> 1;
+    using System;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.Runtime.InteropServices;
 
-         double[] tmp = new double[n];
+    public class ImageDecoder
+    {
+        static void TransformDobes(double[] a, int n, double h0, double h1, double h2, double h3, double g0, double g1, double g2, double g3)
+        {
+            if (n >= 4)
+            {
+                int i, j;
+                int half = n >> 1;
 
-         i = 0;
-         for (j = 0; j < n-3; j = j + 2) {
-            tmp[i]      = a[j]*h0 + a[j+1]*h1 + a[j+2]*h2 + a[j+3]*h3;
-            tmp[i+half] = a[j]*g0 + a[j+1]*g1 + a[j+2]*g2 + a[j+3]*g3;
-            i++;
-         }
+                double[] tmp = new double[n];
 
-         tmp[i]      = a[n-2]*h0 + a[n-1]*h1 + a[0]*h2 + a[1]*h3;
-         tmp[i+half] = a[n-2]*g0 + a[n-1]*g1 + a[0]*g2 + a[1]*g3;
+                i = 0;
+                for (j = 0; j < n - 3; j = j + 2)
+                {
+                    tmp[i] = a[j] * h0 + a[j + 1] * h1 + a[j + 2] * h2 + a[j + 3] * h3;
+                    tmp[i + half] = a[j] * g0 + a[j + 1] * g1 + a[j + 2] * g2 + a[j + 3] * g3;
+                    i++;
+                }
 
-         for (i = 0; i < n; i++) {
-            a[i] = tmp[i];
-         }
-      }
-   } // transform
+                tmp[i] = a[n - 2] * h0 + a[n - 1] * h1 + a[0] * h2 + a[1] * h3;
+                tmp[i + half] = a[n - 2] * g0 + a[n - 1] * g1 + a[0] * g2 + a[1] * g3;
+
+                for (i = 0; i < n; i++)
+                {
+                    a[i] = tmp[i];
+                }
+            }
+        } // transform
 
 
-   static void invTransformDobes( double[] a, int n , double Ih0, double Ih1, double Ih2, double Ih3, double Ig0, double Ig1, double Ig2, double Ig3)
-   {
-      if (n >= 4) {
-        int i, j;
-        int half = n >> 1;
-        int halfPls1 = half + 1;
+        static void InvTransformDobes(double[] a, int n, double Ih0, double Ih1, double Ih2, double Ih3, double Ig0, double Ig1, double Ig2, double Ig3)
+        {
+            if (n >= 4)
+            {
+                int i, j;
+                int half = n >> 1;
+                int halfPls1 = half + 1;
 
-        double[] tmp = new double[n];
+                double[] tmp = new double[n];
 
-        //      last smooth val  last coef.  first smooth  first coef
-        tmp[0] = a[half-1]*Ih0 + a[n-1]*Ih1 + a[0]*Ih2 + a[half]*Ih3;
-        tmp[1] = a[half-1]*Ig0 + a[n-1]*Ig1 + a[0]*Ig2 + a[half]*Ig3;
-        j = 2;
-        for (i = 0; i < half-1; i++) {
-          //     smooth val     coef. val       smooth val     coef. val
-          tmp[j++] = a[i]*Ih0 + a[i+half]*Ih1 + a[i+1]*Ih2 + a[i+halfPls1]*Ih3;
-          tmp[j++] = a[i]*Ig0 + a[i+half]*Ig1 + a[i+1]*Ig2 + a[i+halfPls1]*Ig3;
+                //      last smooth val  last coef.  first smooth  first coef
+                tmp[0] = a[half - 1] * Ih0 + a[n - 1] * Ih1 + a[0] * Ih2 + a[half] * Ih3;
+                tmp[1] = a[half - 1] * Ig0 + a[n - 1] * Ig1 + a[0] * Ig2 + a[half] * Ig3;
+                j = 2;
+                for (i = 0; i < half - 1; i++)
+                {
+                    //     smooth val     coef. val       smooth val     coef. val
+                    tmp[j++] = a[i] * Ih0 + a[i + half] * Ih1 + a[i + 1] * Ih2 + a[i + halfPls1] * Ih3;
+                    tmp[j++] = a[i] * Ig0 + a[i + half] * Ig1 + a[i + 1] * Ig2 + a[i + halfPls1] * Ig3;
+                }
+                for (i = 0; i < n; i++)
+                {
+                    a[i] = tmp[i];
+                }
+            }
         }
-        for (i = 0; i < n; i++) {
-          a[i] = tmp[i];
-        }
-      }
-   }
 
-       
+
         private void MakeGray(Bitmap bmp)
         {
             // Задаём формат Пикселя.
@@ -74,7 +75,7 @@ namespace ClassLibraryImageDecoder
 
             // Получаем адрес первой точки.
             IntPtr ptr = bmpData.Scan0;
- 
+
             // Задаём массив из Byte и помещаем в него набор данных.
             // int numBytes = bmp.Width * bmp.Height * 3; 
             //На 3 умножаем - поскольку RGB цвет кодируется 3-мя байтами
@@ -87,15 +88,15 @@ namespace ClassLibraryImageDecoder
             double[] rValues = new double[bmp.Width * bmp.Height];
             double[] gValues = new double[bmp.Width * bmp.Height];
             double[] bValues = new double[bmp.Width * bmp.Height];
-        /** forward transform scaling coefficients */
-         double h0, h1, h2, h3;
-        /** forward transform wave coefficients */
-         double g0, g1, g2, g3;
+            /** forward transform scaling coefficients */
+            double h0, h1, h2, h3;
+            /** forward transform wave coefficients */
+            double g0, g1, g2, g3;
 
-         double Ih0, Ih1, Ih2, Ih3;
-         double Ig0, Ig1, Ig2, Ig3;
+            double Ih0, Ih1, Ih2, Ih3;
+            double Ig0, Ig1, Ig2, Ig3;
 
-        double sqrt_3 = Math.Sqrt(3);
+            double sqrt_3 = Math.Sqrt(3);
             double denom = 4 * Math.Sqrt(2);
 
             //
@@ -129,9 +130,9 @@ namespace ClassLibraryImageDecoder
 
             for (int counter = 0; counter < bmp.Width * bmp.Height; counter += 1)
             {
-                rValues[counter] = rgbValues[counter*3];
-                gValues[counter] = rgbValues[counter*3+1];
-                bValues[counter] = rgbValues[counter*3+2];
+                rValues[counter] = rgbValues[counter * 3];
+                gValues[counter] = rgbValues[counter * 3 + 1];
+                bValues[counter] = rgbValues[counter * 3 + 2];
             }
             for (int i = 0; i < 15; i++)
             {
@@ -176,9 +177,9 @@ namespace ClassLibraryImageDecoder
 
             for (int n = kWidth * kHeight; n >= 4; n >>= 1)
             {
-                transformDobes(rValuesk, n);
-                transformDobes(gValuesk, n);
-                transformDobes(bValuesk, n);
+                TransformDobes(rValuesk, n);
+                TransformDobes(gValuesk, n);
+                TransformDobes(bValuesk, n);
             }
 
             for (int counter = 0; counter < kWidth * kHeight; counter += 1)
@@ -193,9 +194,9 @@ namespace ClassLibraryImageDecoder
 
             for (int n = 4; n <= kWidth * kHeight; n <<= 1)
             {
-                invTransformDobes(rValuesk, n);
-                invTransformDobes(gValuesk, n);
-                invTransformDobes(bValuesk, n);
+                InvTransformDobes(rValuesk, n);
+                InvTransformDobes(gValuesk, n);
+                InvTransformDobes(bValuesk, n);
             }
 
             for (int Height = 0; Height < kHeight; Height += 1)
@@ -204,11 +205,11 @@ namespace ClassLibraryImageDecoder
                 {
                     if ((Width < bmp.Width) && (Height < bmp.Height))
                     {
-                        rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] ;
-                        gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] ;
-                        bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))] ;
+                        rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))];
+                        gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))];
+                        bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))];
                     }
-                    
+
                 }
             }
 
@@ -224,8 +225,5 @@ namespace ClassLibraryImageDecoder
             // Разблокируем набор данных изображения в памяти.
             bmp.UnlockBits(bmpData);
         }
-    public class Class1
-    {
-
     }
 }
