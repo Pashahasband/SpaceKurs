@@ -214,6 +214,10 @@
         {
             //Открываем файл картинки...
             var img = Image.FromFile(idimage + ".jpg");
+            int width = img.Width;
+            int height = img.Height;
+            pictureBox1.Width = width;
+            pictureBox1.Height = height;
             //Помещаем исходное изображение в PictureBox1
             pictureBox1.Image = img;
 
@@ -228,7 +232,7 @@
         {
             if (this.WindowState == FormWindowState.Minimized)
             {
-                this.WindowState = FormWindowState.Normal;
+                this.WindowState = FormWindowState.Maximized;
                 this.ShowInTaskbar = true;
                 notifyIcon1.Visible = true;
             }

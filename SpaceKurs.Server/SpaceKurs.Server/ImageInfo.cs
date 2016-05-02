@@ -9,6 +9,8 @@
     {
         public Guid Id { get; set; }
 
+        public string TypeName { get; set; }
+
         public string ImagePath { get; set; }
 
         public string PreviewPath { get; set; }

@@ -20,16 +20,22 @@
             _registry = new Collection<ImageInfo>();
         }
 
+
+
         public static ImageInfo AddImage(
             string imagePath)
         {
             var id = Guid.NewGuid();
+            
+            string typeInfo = imagePath.Substring(imagePath.LastIndexOf(@".") + 1);
             Instance.Value._registry.Add(new ImageInfo
                                          {
                                              Id = id,
-                                             ImagePath = imagePath
-                                         });
+                                             ImagePath = imagePath,
+                                             TypeName = typeInfo
 
+        });
+            
             return GetImageInfo(id);
         }
 
@@ -37,6 +43,7 @@
             string imagePath)
         {
             var imageInfo = GetImageInfo(imagePath);
+            
             if (imageInfo != null)
             {
                 Instance.Value._registry.Remove(imageInfo);
@@ -56,7 +63,7 @@
         public static ImageInfo GetImageInfo(
             Guid id)
         {
-            return Instance.Value._registry.FirstOrDefault(ii => ii.Id == id);
+           return Instance.Value._registry.FirstOrDefault(ii => ii.Id == id);
         }
 
         public static ImageInfo GetImageInfo(

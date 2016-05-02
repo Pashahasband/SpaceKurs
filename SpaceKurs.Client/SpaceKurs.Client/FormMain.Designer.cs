@@ -122,7 +122,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(12, 35);
+            this.pictureBox1.Location = new System.Drawing.Point(12, 64);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(327, 299);
             this.pictureBox1.TabIndex = 2;
@@ -130,7 +130,7 @@
             // 
             // buttonyes
             // 
-            this.buttonyes.Location = new System.Drawing.Point(55, 340);
+            this.buttonyes.Location = new System.Drawing.Point(25, 35);
             this.buttonyes.Name = "buttonyes";
             this.buttonyes.Size = new System.Drawing.Size(75, 23);
             this.buttonyes.TabIndex = 3;
@@ -141,7 +141,7 @@
             // 
             // buttonno
             // 
-            this.buttonno.Location = new System.Drawing.Point(175, 340);
+            this.buttonno.Location = new System.Drawing.Point(145, 35);
             this.buttonno.Name = "buttonno";
             this.buttonno.Size = new System.Drawing.Size(75, 23);
             this.buttonno.TabIndex = 4;
