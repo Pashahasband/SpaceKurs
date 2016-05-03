@@ -19,6 +19,7 @@
         private int port = 0;
         private Thread th;
         static Guid idimage;
+        static string typeimage;
         static string ipimage;
         static string portimage;
         private WebClient webClient = new WebClient();
@@ -53,21 +54,17 @@
                 (id) => this.Invoke(
                     (Action)(() =>
                     {
-                        //TODO Вот тут должна быть обработка оповещения о новой картиночке
-                        //1. Надо сделать метод, который будет скачивать превьюшечку и оповещать об этом.
-                        //HttpClient webClient = new HttpClient();
-                        //WebClient webClient = new WebClient();
+
+                        //typeimage = 
                         idimage = id;
+                        
                         ipimage = IP;
                         portimage = PORT;
                         this.webClient.DownloadFileCompleted += this.FileDownloadComplete;
                         // pictureBox1 = webClient.Get("http://" + IP + ":" + PORT + "/api/images");
                         var imageUri = new Uri(string.Format("http://{0}:{1}/api/previews/{2}", IP, PORT, id));
                         this.webClient.DownloadFileAsync(imageUri, id + ".jpg");
-
-                        //2. Повесить куда-нибудь загрузку всей картинки, когда будет получен апрув
-
-                        //3. 
+ 
                     })));
             try
             {
@@ -98,9 +95,9 @@
         {
             //Deactivate chat UI; show login UI. 
             /* this.Invoke((Action)(() => ChatPanel.Visible = false));
-             this.Invoke((Action)(() => ButtonSend.Enabled = false));
-             this.Invoke((Action)(() => StatusText.Text = "You have been disconnected."));
-             this.Invoke((Action)(() => SignInPanel.Visible = true));*/
+             this.Invoke((Action)(() => ButtonSend.Enabled = false));*/
+             this.Invoke((Action)(() => label1.Text = "You have been disconnected."));
+             /*this.Invoke((Action)(() => SignInPanel.Visible = true));*/
         }
         public FormMain()
         {
