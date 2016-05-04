@@ -21,9 +21,10 @@
         /// </summary>
         /// <param name="imageId">Идентификатор нового изображения</param>
         public void SendNewImageNotification(
-            Guid imageId)
+            Guid imageId,
+            string imageType)
         {
-            _context.Clients.All.onNewImageReceived(imageId);
+            _context.Clients.All.onNewImageReceived(imageId, imageType);
         }
     }
 }

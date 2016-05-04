@@ -17,6 +17,7 @@
     {
         private const string DirPath = "C:\\дипломный проект\\SpaceKurs\\SpaceKurs.Server\\SpaceKurs.Server\\bin\\Debug\\photos\\";
         //private const string DirPath = "C:\\Sites\\Images\\";
+        //private const string DirPath = "D:\\Projects\\Images\\";
 
         private static IDisposable SignalR { get; set; }
 
@@ -70,7 +71,8 @@
             {
                 var previewPath = ImageDecoderService.EncodeImage(addedImage.ImagePath);
                 addedImage.PreviewPath = previewPath;
-                BroadcastService.SendNewImageNotification(addedImage.Id);
+                addedImage.Extension = Path.GetExtension(previewPath);
+                BroadcastService.SendNewImageNotification(addedImage.Id, addedImage.Extension);
             }
         }
 

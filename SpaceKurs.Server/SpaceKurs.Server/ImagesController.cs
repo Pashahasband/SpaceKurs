@@ -41,9 +41,9 @@
             response.Content = new StreamContent(fileStream);
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
                                                           {
-                                                              FileName = string.Format("{0}.{1}", id, imageInfo.TypeName),
+                                                              FileName = string.Format("{0}{1}", id, imageInfo.Extension),
                                                           };
-            string mediaType = string.Format("image/{0}", imageInfo.TypeName);
+            string mediaType = string.Format("image/{0}", imageInfo.Extension);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
 
             return response;

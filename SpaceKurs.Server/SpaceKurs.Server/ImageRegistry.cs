@@ -32,7 +32,7 @@
                                          {
                                              Id = id,
                                              ImagePath = imagePath,
-                                             TypeName = typeInfo
+                                             Extension = typeInfo
 
         });
             
