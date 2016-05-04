@@ -49,22 +49,21 @@
                 ))
             );*/
 
-            HubProxy.On<Guid>(
+            HubProxy.On<Guid,string>(
                 "OnNewImageReceived",
-                (id) => this.Invoke(
+                (id, TypeName) => this.Invoke(
                     (Action)(() =>
                     {
 
-                        //typeimage = 
+                        typeimage = TypeName;
                         idimage = id;
                         
                         ipimage = IP;
                         portimage = PORT;
                         this.webClient.DownloadFileCompleted += this.FileDownloadComplete;
-                        // pictureBox1 = webClient.Get("http://" + IP + ":" + PORT + "/api/images");
                         var imageUri = new Uri(string.Format("http://{0}:{1}/api/previews/{2}", IP, PORT, id));
-                        this.webClient.DownloadFileAsync(imageUri, id + ".jpg");
- 
+                        this.webClient.DownloadFileAsync(imageUri, string.Format("{0}.jpg", id));  //{1}", id,typeimage);
+
                     })));
             try
             {
