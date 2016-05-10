@@ -206,13 +206,13 @@ namespace TestImageGray
             }
 
 
-            for (int n = kWidth * kHeight; n >= 4; n >>= 1)
+           /* for (int n = kWidth * kHeight; n >= 4; n >>= 1)
             {
                 transformDobes(rValuesk, n);
                 transformDobes(gValuesk, n);
                 transformDobes(bValuesk, n);
             }
-
+            */
             for (int counter = 0; counter < kWidth * kHeight; counter += 1)
             {
                 if (Math.Abs(rValuesk[counter]) < 0.05)
@@ -223,13 +223,13 @@ namespace TestImageGray
                     bValuesk[counter] = 0;
             }
 
-            for (int n = 4; n <= kWidth * kHeight; n <<= 1)
+          /*  for (int n = 4; n <= kWidth * kHeight; n <<= 1)
             {
                 invTransformDobes(rValuesk, n);
                 invTransformDobes(gValuesk, n);
                 invTransformDobes(bValuesk, n);
             }
-
+            */
             for (int Height = 0; Height < kHeight; Height += 1)
             {
                 for (int Width = 0; Width < kWidth; Width += 1)
