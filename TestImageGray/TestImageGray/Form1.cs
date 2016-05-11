@@ -193,9 +193,9 @@ namespace TestImageGray
             double[,] masgk = new double[kHeight, kWidth];
             double[,] masbk = new double[kHeight, kWidth];
 
-            double[,] masrkk = new double[kHeight, kWidth];
-            double[,] masgkk = new double[kHeight, kWidth];
-            double[,] masbkk = new double[kHeight, kWidth];
+            double[,] masrkk = new double[bmp.Height, bmp.Width];
+            double[,] masgkk = new double[bmp.Height, bmp.Width];
+            double[,] masbkk = new double[bmp.Height, bmp.Width];
             //преобразование размера к степени 2ки
             for (int h = 0; h < kHeight; h++)
             {
@@ -225,59 +225,59 @@ namespace TestImageGray
             double[] bValueskkk = new double[kHeight];
             //Прямое преобразование Добеши
             // Применить преобразование к строкам...
-            //for (int i = 0; i < kHeight; i++)
-            //{
-            //    for (int j = 0; j < kWidth; j++)
-            //    {
-            //        rValueskk[j] = masrk[i, j];
-            //        gValueskk[j] = masgk[i, j];
-            //        bValueskk[j] = masbk[i, j];
-            //    }
+            for (int i = 0; i < kHeight; i++)
+            {
+                for (int j = 0; j < kWidth; j++)
+                {
+                    rValueskk[j] = masrk[i, j];
+                    gValueskk[j] = masgk[i, j];
+                    bValueskk[j] = masbk[i, j];
+                }
 
-            //    for (int n = kWidth; n >= 4; n >>= 1)
-            //    {
-            //        transformDobes(ref rValueskk, n);
-            //        transformDobes(ref gValueskk, n);
-            //        transformDobes(ref bValueskk, n);
-            //    }
+                for (int n = kWidth; n >= 4; n >>= 1)
+                {
+                    transformDobes(ref rValueskk, n);
+                    transformDobes(ref gValueskk, n);
+                    transformDobes(ref bValueskk, n);
+                }
 
-            //    for (int j = 0; j < kWidth; j++)
-            //    {
-            //        masrk[i, j] = rValueskk[j];
-            //        masgk[i, j] = gValueskk[j];
-            //        masbk[i, j] = bValueskk[j];
-            //        rValueskk[j] = 0;
-            //        gValueskk[j] = 0;
-            //        bValueskk[j] = 0;
-            //    }
-            //}
-            //// ...и столбцам.
-            //for (int i = 0; i < kWidth; i++)
-            //{
-            //    for (int j = 0; j < kHeight; j++)
-            //    {
-            //        rValueskkk[j] = masrk[j, i];
-            //        gValueskkk[j] = masgk[j, i];
-            //        bValueskkk[j] = masbk[j, i];
-            //    }
+                for (int j = 0; j < kWidth; j++)
+                {
+                    masrk[i, j] = rValueskk[j];
+                    masgk[i, j] = gValueskk[j];
+                    masbk[i, j] = bValueskk[j];
+                    rValueskk[j] = 0;
+                    gValueskk[j] = 0;
+                    bValueskk[j] = 0;
+                }
+            }
+            // ...и столбцам.
+            for (int i = 0; i < kWidth; i++)
+            {
+                for (int j = 0; j < kHeight; j++)
+                {
+                    rValueskkk[j] = masrk[j, i];
+                    gValueskkk[j] = masgk[j, i];
+                    bValueskkk[j] = masbk[j, i];
+                }
 
-            //    for (int n = kHeight; n >= 4; n >>= 1)
-            //    {
-            //        transformDobes(ref rValueskkk, n);
-            //        transformDobes(ref gValueskkk, n);
-            //        transformDobes(ref bValueskkk, n);
-            //    }
+                for (int n = kHeight; n >= 4; n >>= 1)
+                {
+                    transformDobes(ref rValueskkk, n);
+                    transformDobes(ref gValueskkk, n);
+                    transformDobes(ref bValueskkk, n);
+                }
 
-            //    for (int j = 0; j < kHeight; j++)
-            //    {
-            //        masrk[j, i] = rValueskkk[j];
-            //        masgk[j, i] = gValueskkk[j];
-            //        masbk[j, i] = bValueskkk[j];
-            //        rValueskk[j] = 0;
-            //        gValueskk[j] = 0;
-            //        bValueskk[j] = 0;
-            //    }
-            //}
+                for (int j = 0; j < kHeight; j++)
+                {
+                    masrk[j, i] = rValueskkk[j];
+                    masgk[j, i] = gValueskkk[j];
+                    masbk[j, i] = bValueskkk[j];
+                    rValueskk[j] = 0;
+                    gValueskk[j] = 0;
+                    bValueskk[j] = 0;
+                }
+            }
 
             //Провекра коэффициентов
             for (int i = 0; i < kHeight; i++)
@@ -292,17 +292,88 @@ namespace TestImageGray
                         masbk[i, j] = 0;
                 }
             }
-            //Дибильный переворот изображения
-            for (int i = 0; i < kHeight / 2; i++)
+            
+            //Обратное преобразование Добеши
+            // Применить преобразование к строкам...
+            for (int i = 0; i < kHeight; i++)
             {
-                for (int j = 0; j < kWidth / 2; j++)
+                for (int j = 0; j < kWidth; j++)
                 {
-                    masrkk[i, j] = masrk[i * 2, j * 2];
-                    masgkk[i, j] = masgk[i * 2, j * 2];
-                    masbkk[i, j] = masbk[i * 2, j * 2];
+                    rValueskk[j] = masrk[i, j];
+                    gValueskk[j] = masgk[i, j];
+                    bValueskk[j] = masbk[i, j];
+                }
+                for (int n = 4; n <= kWidth; n <<= 1)
+                {
+                    invTransformDobes(ref rValueskk, n);
+                    invTransformDobes(ref gValueskk, n);
+                    invTransformDobes(ref bValueskk, n);
+                }
+
+                for (int j = 0; j < kWidth; j++)
+                {
+                    masrk[i, j] = rValueskk[j];
+                    masgk[i, j] = gValueskk[j];
+                    masbk[i, j] = bValueskk[j];
+                    rValueskk[j] = 0;
+                    gValueskk[j] = 0;
+                    bValueskk[j] = 0;
                 }
             }
+            // ...и столбцам.
+            for (int i = 0; i < kWidth; i++)
+            {
+                for (int j = 0; j < kHeight; j++)
+                {
+                    rValueskkk[j] = masrk[j, i];
+                    gValueskkk[j] = masgk[j, i];
+                    bValueskkk[j] = masbk[j, i];
+                }
 
+                for (int n = 4; n <= kHeight; n <<= 1)
+                {
+                    invTransformDobes(ref rValueskkk, n);
+                    invTransformDobes(ref gValueskkk, n);
+                    invTransformDobes(ref bValueskkk, n);
+                }
+
+                for (int j = 0; j < kHeight; j++)
+                {
+                    masrk[j, i] = rValueskkk[j];
+                    masgk[j, i] = gValueskkk[j];
+                    masbk[j, i] = bValueskkk[j];
+                    rValueskk[j] = 0;
+                    gValueskk[j] = 0;
+                    bValueskk[j] = 0;
+                }
+            }
+            double[,] masrkkk = new double[bmp.Height, bmp.Width];
+            double[,] masgkkk = new double[bmp.Height, bmp.Width];
+            double[,] masbkkk = new double[bmp.Height, bmp.Width];
+
+            for (int Height = 0; Height < kHeight; Height += 1)
+            {
+                for (int Width = 0; Width < kWidth; Width += 1)
+                {
+                    if ((Width < bmp.Width) && (Height < bmp.Height))
+                    {
+                        masrkkk[Height, Width] = masrk[Height, Width];
+                        masgkkk[Height, Width] = masgk[Height, Width];
+                        masbkkk[Height, Width] = masbk[Height, Width];
+                    }
+                }
+            }
+            //Дибильный переворот изображения
+            for (int i = 0; i < bmp.Height / 2; i++)
+            {
+                for (int j = 0; j < bmp.Width / 2; j++)
+                {
+                    masrkk[i, j] = masrkkk[i * 2, j * 2];
+                    masgkk[i, j] = masgkkk[i * 2, j * 2];
+                    masbkk[i, j] = masbkkk[i * 2, j * 2];
+                }
+            }
+            /*
             for (int i = kHeight / 2; i < kHeight; i++)
             {
                 for (int j = 0; j < kWidth / 2; j++)
@@ -330,64 +401,8 @@ namespace TestImageGray
                     masgkk[i, j] = masgk[(i - kHeight / 2) * 2 + 1, (j - kWidth / 2) * 2 + 1];
                     masbkk[i, j] = masbk[(i - kHeight / 2) * 2 + 1, (j - kWidth / 2) * 2 + 1];
                 }
-            }
+            }*/
             //конец дибильного переворота
-            //Обратное преобразование Добеши
-            // Применить преобразование к строкам...
-            //for (int i = 0; i < kHeight; i++)
-            //{
-            //    for (int j = 0; j < kWidth; j++)
-            //    {
-            //        rValueskk[j] = masrk[i, j];
-            //        gValueskk[j] = masgk[i, j];
-            //        bValueskk[j] = masbk[i, j];
-            //    }
-            //    for (int n = 4; n <= kWidth; n <<= 1)
-            //    {
-            //        invTransformDobes(ref rValueskk, n);
-            //        invTransformDobes(ref gValueskk, n);
-            //        invTransformDobes(ref bValueskk, n);
-            //    }
-
-            //    for (int j = 0; j < kWidth; j++)
-            //    {
-            //        masrk[i, j] = rValueskk[j];
-            //        masgk[i, j] = gValueskk[j];
-            //        masbk[i, j] = bValueskk[j];
-            //        rValueskk[j] = 0;
-            //        gValueskk[j] = 0;
-            //        bValueskk[j] = 0;
-            //    }
-            //}
-            //// ...и столбцам.
-            //for (int i = 0; i < kWidth; i++)
-            //{
-            //    for (int j = 0; j < kHeight; j++)
-            //    {
-            //        rValueskkk[j] = masrk[j, i];
-            //        gValueskkk[j] = masgk[j, i];
-            //        bValueskkk[j] = masbk[j, i];
-            //    }
-
-            //    for (int n = 4; n <= kHeight; n <<= 1)
-            //    {
-            //        invTransformDobes(ref rValueskkk, n);
-            //        invTransformDobes(ref gValueskkk, n);
-            //        invTransformDobes(ref bValueskkk, n);
-            //    }
-
-            //    for (int j = 0; j < kHeight; j++)
-            //    {
-            //        masrk[j, i] = rValueskkk[j];
-            //        masgk[j, i] = gValueskkk[j];
-            //        masbk[j, i] = bValueskkk[j];
-            //        rValueskk[j] = 0;
-            //        gValueskk[j] = 0;
-            //        bValueskk[j] = 0;
-            //    }
-            //}
-             
-            
             //преобразование к исходному размеру
             for (int Height = 0; Height < kHeight; Height += 1)
             {
