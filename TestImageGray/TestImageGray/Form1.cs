@@ -293,7 +293,7 @@ namespace TestImageGray
                 }
             }
             ///Дибильный переворот изображения
-            for (int i = 0; i < kHeight / 2; i++)
+            /*for (int i = 0; i < kHeight / 2; i++)
             {
                 for (int j = 0; j < kWidth / 2; j++)
                 {
@@ -330,11 +330,11 @@ namespace TestImageGray
                     masgkk[i, j] = masgk[(i - kHeight / 2) * 2 + 1, (j - kWidth / 2) * 2 + 1];
                     masbkk[i, j] = masbk[(i - kHeight / 2) * 2 + 1, (j - kWidth / 2) * 2 + 1];
                 }
-            }
+            }*/
             ////конец дибильного переворота
             //Обратное преобразование Добеши
             // Применить преобразование к строкам...
-            /* for (int i = 0; i < kHeight; i++)
+             for (int i = 0; i < kHeight; i++)
              {
                  for (int j = 0; j < kWidth; j++)
                  {
@@ -386,8 +386,8 @@ namespace TestImageGray
                      bValueskk[j] = 0;
                  }
              }
-             */
-
+             
+            
             //преобразование к исходному размеру
             for (int Height = 0; Height < kHeight; Height += 1)
             {
@@ -395,23 +395,23 @@ namespace TestImageGray
                 {
                     if ((Width < bmp.Width) && (Height < bmp.Height))
                     {
-                        if (masrkk[Height, Width] > 0)
-                            if (masrkk[Height, Width] < 255)
-                                rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] = masrkk[Height, Width];
+                        if (masrk[Height, Width] > 0)
+                            if (masrk[Height, Width] < 255)
+                                rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] = masrk[Height, Width];
                             else
                                 rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] = 255;
                         else
                             rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] = 0;
-                        if (masgkk[Height, Width] > 0)
-                            if (masgkk[Height, Width] < 255)
-                                gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] = masgkk[Height, Width];
+                        if (masgk[Height, Width] > 0)
+                            if (masgk[Height, Width] < 255)
+                                gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] = masgk[Height, Width];
                             else
                                 gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] = 255;
                         else
                             gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] = 0;
-                        if (masbkk[Height, Width] > 0)
-                            if (masbkk[Height, Width] < 255)
-                                bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))] = masbkk[Height, Width];
+                        if (masbk[Height, Width] > 0)
+                            if (masbk[Height, Width] < 255)
+                                bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))] = masbk[Height, Width];
                             else
                                 bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))] = 255;
                         else
