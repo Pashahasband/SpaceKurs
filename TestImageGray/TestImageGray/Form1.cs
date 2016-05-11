@@ -197,21 +197,21 @@ namespace TestImageGray
             double[,] masgkk = new double[kHeight, kWidth];
             double[,] masbkk = new double[kHeight, kWidth];
             //преобразование размера к степени 2ки
-            for (int Height = 0; Height < kHeight; Height += 1)
+            for (int h = 0; h < kHeight; h++)
             {
-                for (int Width = 0; Width < kWidth; Width += 1)
+                for (int w = 0; w < kWidth; w++)
                 {
-                    if ((Width < bmp.Width) && (Height < bmp.Height))
+                    if ((w < bmp.Width) && (h < bmp.Height))
                     {
-                        masrk[Height, Width] = rValuesk[(Width + (Height * kWidth))] = rValues[(Width + (Height * bmp.Width))];
-                        masgk[Height, Width] = gValuesk[(Width + (Height * kWidth))] = gValues[(Width + (Height * bmp.Width))];
-                        masbk[Height, Width] = bValuesk[(Width + (Height * kWidth))] = bValues[(Width + (Height * bmp.Width))];
+                        masrk[h, w] = rValuesk[(w + (h * kWidth))] = rValues[(w + (h * bmp.Width))];
+                        masgk[h, w] = gValuesk[(w + (h * kWidth))] = gValues[(w + (h * bmp.Width))];
+                        masbk[h, w] = bValuesk[(w + (h * kWidth))] = bValues[(w + (h * bmp.Width))];
                     }
                     else
                     {
-                        masrk[Height, Width] = rValuesk[(Width + (Height * kWidth))] = 0;
-                        masgk[Height, Width] = gValuesk[(Width + (Height * kWidth))] = 0;
-                        masbk[Height, Width] = bValuesk[(Width + (Height * kWidth))] = 0;
+                        masrk[h, w] = rValuesk[(w + (h * kWidth))] = 0;
+                        masgk[h, w] = gValuesk[(w + (h * kWidth))] = 0;
+                        masbk[h, w] = bValuesk[(w + (h * kWidth))] = 0;
                     }
                 }
             }
@@ -225,59 +225,59 @@ namespace TestImageGray
             double[] bValueskkk = new double[kHeight];
             //Прямое преобразование Добеши
             // Применить преобразование к строкам...
-            for (int i = 0; i < kHeight; i++)
-            {
-                for (int j = 0; j < kWidth; j++)
-                {
-                    rValueskk[j] = masrk[i, j];
-                    gValueskk[j] = masgk[i, j];
-                    bValueskk[j] = masbk[i, j];
-                }
+            //for (int i = 0; i < kHeight; i++)
+            //{
+            //    for (int j = 0; j < kWidth; j++)
+            //    {
+            //        rValueskk[j] = masrk[i, j];
+            //        gValueskk[j] = masgk[i, j];
+            //        bValueskk[j] = masbk[i, j];
+            //    }
 
-                for (int n = kWidth; n >= 4; n >>= 1)
-                {
-                    transformDobes(ref rValueskk, n);
-                    transformDobes(ref gValueskk, n);
-                    transformDobes(ref bValueskk, n);
-                }
+            //    for (int n = kWidth; n >= 4; n >>= 1)
+            //    {
+            //        transformDobes(ref rValueskk, n);
+            //        transformDobes(ref gValueskk, n);
+            //        transformDobes(ref bValueskk, n);
+            //    }
 
-                for (int j = 0; j < kWidth; j++)
-                {
-                    masrk[i, j] = rValueskk[j];
-                    masgk[i, j] = gValueskk[j];
-                    masbk[i, j] = bValueskk[j];
-                    rValueskk[j] = 0;
-                    gValueskk[j] = 0;
-                    bValueskk[j] = 0;
-                }
-            }
-            // ...и столбцам.
-            for (int i = 0; i < kWidth; i++)
-            {
-                for (int j = 0; j < kHeight; j++)
-                {
-                    rValueskkk[j] = masrk[j, i];
-                    gValueskkk[j] = masgk[j, i];
-                    bValueskkk[j] = masbk[j, i];
-                }
+            //    for (int j = 0; j < kWidth; j++)
+            //    {
+            //        masrk[i, j] = rValueskk[j];
+            //        masgk[i, j] = gValueskk[j];
+            //        masbk[i, j] = bValueskk[j];
+            //        rValueskk[j] = 0;
+            //        gValueskk[j] = 0;
+            //        bValueskk[j] = 0;
+            //    }
+            //}
+            //// ...и столбцам.
+            //for (int i = 0; i < kWidth; i++)
+            //{
+            //    for (int j = 0; j < kHeight; j++)
+            //    {
+            //        rValueskkk[j] = masrk[j, i];
+            //        gValueskkk[j] = masgk[j, i];
+            //        bValueskkk[j] = masbk[j, i];
+            //    }
 
-                for (int n = kHeight; n >= 4; n >>= 1)
-                {
-                    transformDobes(ref rValueskkk, n);
-                    transformDobes(ref gValueskkk, n);
-                    transformDobes(ref bValueskkk, n);
-                }
+            //    for (int n = kHeight; n >= 4; n >>= 1)
+            //    {
+            //        transformDobes(ref rValueskkk, n);
+            //        transformDobes(ref gValueskkk, n);
+            //        transformDobes(ref bValueskkk, n);
+            //    }
 
-                for (int j = 0; j < kHeight; j++)
-                {
-                    masrk[j, i] = rValueskkk[j];
-                    masgk[j, i] = gValueskkk[j];
-                    masbk[j, i] = bValueskkk[j];
-                    rValueskk[j] = 0;
-                    gValueskk[j] = 0;
-                    bValueskk[j] = 0;
-                }
-            }
+            //    for (int j = 0; j < kHeight; j++)
+            //    {
+            //        masrk[j, i] = rValueskkk[j];
+            //        masgk[j, i] = gValueskkk[j];
+            //        masbk[j, i] = bValueskkk[j];
+            //        rValueskk[j] = 0;
+            //        gValueskk[j] = 0;
+            //        bValueskk[j] = 0;
+            //    }
+            //}
 
             //Провекра коэффициентов
             for (int i = 0; i < kHeight; i++)
@@ -292,8 +292,8 @@ namespace TestImageGray
                         masbk[i, j] = 0;
                 }
             }
-            ///Дибильный переворот изображения
-            /*for (int i = 0; i < kHeight / 2; i++)
+            //Дибильный переворот изображения
+            for (int i = 0; i < kHeight / 2; i++)
             {
                 for (int j = 0; j < kWidth / 2; j++)
                 {
@@ -330,62 +330,62 @@ namespace TestImageGray
                     masgkk[i, j] = masgk[(i - kHeight / 2) * 2 + 1, (j - kWidth / 2) * 2 + 1];
                     masbkk[i, j] = masbk[(i - kHeight / 2) * 2 + 1, (j - kWidth / 2) * 2 + 1];
                 }
-            }*/
-            ////конец дибильного переворота
+            }
+            //конец дибильного переворота
             //Обратное преобразование Добеши
             // Применить преобразование к строкам...
-             for (int i = 0; i < kHeight; i++)
-             {
-                 for (int j = 0; j < kWidth; j++)
-                 {
-                     rValueskk[j] = masrk[i, j];
-                     gValueskk[j] = masgk[i, j];
-                     bValueskk[j] = masbk[i, j];
-                 }
-                 for (int n = 4; n <= kWidth ; n <<= 1)
-                 {
-                     invTransformDobes(ref rValueskk, n);
-                     invTransformDobes(ref gValueskk, n);
-                     invTransformDobes(ref bValueskk, n);
-                 }
+            //for (int i = 0; i < kHeight; i++)
+            //{
+            //    for (int j = 0; j < kWidth; j++)
+            //    {
+            //        rValueskk[j] = masrk[i, j];
+            //        gValueskk[j] = masgk[i, j];
+            //        bValueskk[j] = masbk[i, j];
+            //    }
+            //    for (int n = 4; n <= kWidth; n <<= 1)
+            //    {
+            //        invTransformDobes(ref rValueskk, n);
+            //        invTransformDobes(ref gValueskk, n);
+            //        invTransformDobes(ref bValueskk, n);
+            //    }
 
-                 for (int j = 0; j < kWidth; j++)
-                 {
-                     masrk[i, j] = rValueskk[j];
-                     masgk[i, j] = gValueskk[j];
-                     masbk[i, j] = bValueskk[j];
-                     rValueskk[j] = 0;
-                     gValueskk[j] = 0;
-                     bValueskk[j] = 0;
-                 }
-             }
-             // ...и столбцам.
-             for (int i = 0; i < kWidth; i++)
-             {
-                 for (int j = 0; j < kHeight; j++)
-                 {
-                     rValueskkk[j] = masrk[j, i];
-                     gValueskkk[j] = masgk[j, i];
-                     bValueskkk[j] = masbk[j, i];
-                 }
+            //    for (int j = 0; j < kWidth; j++)
+            //    {
+            //        masrk[i, j] = rValueskk[j];
+            //        masgk[i, j] = gValueskk[j];
+            //        masbk[i, j] = bValueskk[j];
+            //        rValueskk[j] = 0;
+            //        gValueskk[j] = 0;
+            //        bValueskk[j] = 0;
+            //    }
+            //}
+            //// ...и столбцам.
+            //for (int i = 0; i < kWidth; i++)
+            //{
+            //    for (int j = 0; j < kHeight; j++)
+            //    {
+            //        rValueskkk[j] = masrk[j, i];
+            //        gValueskkk[j] = masgk[j, i];
+            //        bValueskkk[j] = masbk[j, i];
+            //    }
 
-                 for (int n = 4; n <= kHeight; n <<= 1)
-                 {
-                     invTransformDobes(ref rValueskkk, n);
-                     invTransformDobes(ref gValueskkk, n);
-                     invTransformDobes(ref bValueskkk, n);
-                 }
+            //    for (int n = 4; n <= kHeight; n <<= 1)
+            //    {
+            //        invTransformDobes(ref rValueskkk, n);
+            //        invTransformDobes(ref gValueskkk, n);
+            //        invTransformDobes(ref bValueskkk, n);
+            //    }
 
-                 for (int j = 0; j < kHeight; j++)
-                 {
-                     masrk[j, i] = rValueskkk[j];
-                     masgk[j, i] = gValueskkk[j];
-                     masbk[j, i] = bValueskkk[j];
-                     rValueskk[j] = 0;
-                     gValueskk[j] = 0;
-                     bValueskk[j] = 0;
-                 }
-             }
+            //    for (int j = 0; j < kHeight; j++)
+            //    {
+            //        masrk[j, i] = rValueskkk[j];
+            //        masgk[j, i] = gValueskkk[j];
+            //        masbk[j, i] = bValueskkk[j];
+            //        rValueskk[j] = 0;
+            //        gValueskk[j] = 0;
+            //        bValueskk[j] = 0;
+            //    }
+            //}
              
             
             //преобразование к исходному размеру
@@ -395,23 +395,23 @@ namespace TestImageGray
                 {
                     if ((Width < bmp.Width) && (Height < bmp.Height))
                     {
-                        if (masrk[Height, Width] > 0)
-                            if (masrk[Height, Width] < 255)
-                                rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] = masrk[Height, Width];
+                        if (masrkk[Height, Width] > 0)
+                            if (masrkk[Height, Width] < 255)
+                                rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] = masrkk[Height, Width];
                             else
                                 rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] = 255;
                         else
                             rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] = 0;
-                        if (masgk[Height, Width] > 0)
-                            if (masgk[Height, Width] < 255)
-                                gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] = masgk[Height, Width];
+                        if (masgkk[Height, Width] > 0)
+                            if (masgkk[Height, Width] < 255)
+                                gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] = masgkk[Height, Width];
                             else
                                 gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] = 255;
                         else
                             gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] = 0;
-                        if (masbk[Height, Width] > 0)
-                            if (masbk[Height, Width] < 255)
-                                bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))] = masbk[Height, Width];
+                        if (masbkk[Height, Width] > 0)
+                            if (masbkk[Height, Width] < 255)
+                                bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))] = masbkk[Height, Width];
                             else
                                 bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))] = 255;
                         else
