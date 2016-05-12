@@ -101,6 +101,7 @@
     <Compile Include="BroadcastService.cs" />
     <Compile Include="ImageDecoderService.cs" />
     <Compile Include="ImageInfo.cs" />
+    <Compile Include="IntermediateController.cs" />
     <Compile Include="PreviewsController.cs" />
     <Compile Include="ImageRegistry.cs" />
     <Compile Include="ImagesController.cs" />

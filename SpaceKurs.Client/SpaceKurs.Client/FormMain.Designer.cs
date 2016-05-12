@@ -45,6 +45,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.buttonyes1 = new System.Windows.Forms.Button();
+            this.buttonno1 = new System.Windows.Forms.Button();
+            this.buttonminimum = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -177,11 +180,47 @@
             this.label4.TabIndex = 7;
             this.label4.Visible = false;
             // 
+            // buttonyes1
+            // 
+            this.buttonyes1.Location = new System.Drawing.Point(34, 35);
+            this.buttonyes1.Name = "buttonyes1";
+            this.buttonyes1.Size = new System.Drawing.Size(75, 23);
+            this.buttonyes1.TabIndex = 8;
+            this.buttonyes1.Text = "Да";
+            this.buttonyes1.UseVisualStyleBackColor = true;
+            this.buttonyes1.Visible = false;
+            this.buttonyes1.Click += new System.EventHandler(this.buttonyes1_Click);
+            // 
+            // buttonno1
+            // 
+            this.buttonno1.Location = new System.Drawing.Point(154, 35);
+            this.buttonno1.Name = "buttonno1";
+            this.buttonno1.Size = new System.Drawing.Size(75, 23);
+            this.buttonno1.TabIndex = 9;
+            this.buttonno1.Text = "Нет";
+            this.buttonno1.UseVisualStyleBackColor = true;
+            this.buttonno1.Visible = false;
+            this.buttonno1.Click += new System.EventHandler(this.buttonno1_Click);
+            // 
+            // buttonminimum
+            // 
+            this.buttonminimum.Location = new System.Drawing.Point(45, 35);
+            this.buttonminimum.Name = "buttonminimum";
+            this.buttonminimum.Size = new System.Drawing.Size(75, 23);
+            this.buttonminimum.TabIndex = 10;
+            this.buttonminimum.Text = "Свернуть";
+            this.buttonminimum.UseVisualStyleBackColor = true;
+            this.buttonminimum.Visible = false;
+            this.buttonminimum.Click += new System.EventHandler(this.buttonminimum_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(350, 375);
+            this.Controls.Add(this.buttonminimum);
+            this.Controls.Add(this.buttonno1);
+            this.Controls.Add(this.buttonyes1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -220,6 +259,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button buttonyes1;
+        private System.Windows.Forms.Button buttonno1;
+        private System.Windows.Forms.Button buttonminimum;
     }
 }
 
