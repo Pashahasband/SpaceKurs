@@ -6,9 +6,8 @@
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Web.Http;
-
-    [RoutePrefix("api/images")]
-    public class ImagesController : ApiController
+    [RoutePrefix("/api/intermediate")]
+    public class IntermediateController : ApiController
     {
         [HttpGet]
         public HttpResponseMessage Get()
@@ -17,16 +16,16 @@
             var fileStream = new FileStream("lena.jpg", FileMode.Open, FileAccess.Read);
             response.Content = new StreamContent(fileStream);
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-                                                          {
-                                                              FileName = "lena.jpg"
-                                                          };
+            {
+                FileName = "lena.jpg"
+            };
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpg");
 
             return response;
         }
 
+        [Route("{id:guid")]
         [HttpGet]
-        [Route("{id:guid}")]
         public HttpResponseMessage Get(
             Guid id)
         {
@@ -37,7 +36,7 @@
             }
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            var fileStream = new FileStream(imageInfo.ImagePath, FileMode.Open, FileAccess.Read);
+            var fileStream = new FileStream(imageInfo.IntermediatePath, FileMode.Open, FileAccess.Read);
             response.Content = new StreamContent(fileStream);
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
             {

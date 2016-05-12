@@ -21,6 +21,7 @@
         static Guid imageId;
         static string imageExtension;
         static string serverIp;
+        static string serverExtension;
         static string serverPort;
         private WebClient webClient = new WebClient();
         //Video video;
@@ -60,6 +61,7 @@
 
                         serverIp = IP;
                         serverPort = PORT;
+                        serverExtension = extension;
                         this.webClient.DownloadFileCompleted += this.FileDownloadComplete;
                         var imageUri = new Uri(string.Format("http://{0}:{1}/api/previews/{2}", IP, PORT, id));
                         //this.webClient.DownloadFileAsync(imageUri, string.Format("{0}.jpg", id));  //{1}", id,typeimage);
@@ -211,6 +213,42 @@
             //MessageBox.Show("Download comleted");
         }
 
+        private void FileDownloadCompleteintermediate(object sender, AsyncCompletedEventArgs e)
+        {
+            //Открываем файл картинки...
+            var image = Image.FromFile(string.Format("{0}_intermediate{1}", imageId, serverExtension));
+            int width = image.Width;
+            int height = image.Height;
+            pictureBox1.Width = width;
+            pictureBox1.Height = height;
+            //Помещаем исходное изображение в PictureBox1
+            pictureBox1.Image = image;
+
+                this.label1.Text = "Происходит загрузка изображения, отображается промежуточная степень";
+                this.buttonyes.Visible = false;
+                this.buttonno.Visible = false;
+                this.buttonyes1.Visible = true;
+                this.buttonno1.Visible = true;
+        }
+        private void FileDownloadCompleteimage(object sender, AsyncCompletedEventArgs e)
+        {
+            //Открываем файл картинки...
+            var image = Image.FromFile(string.Format("DownloadedNEWImage{0}", serverExtension));
+            int width = image.Width;
+            int height = image.Height;
+            pictureBox1.Width = width;
+            pictureBox1.Height = height;
+            //Помещаем исходное изображение в PictureBox1
+            pictureBox1.Image = image;
+
+            this.label1.Text = "Изображение загружено на ваш ПК";
+            this.buttonyes.Visible = false;
+            this.buttonno.Visible = false;
+            this.buttonyes1.Visible = false;
+            this.buttonno1.Visible = false;
+            this.buttonminimum.Visible = true;
+
+        }
         private void notifyIcon1_Click(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized)
@@ -227,18 +265,26 @@
 
             //this.webClient.DownloadFileCompleted += this.FileDownloadComplete;
             // pictureBox1 = webClient.Get("http://" + IP + ":" + PORT + "/api/images");
-            var imageUri = new Uri(string.Format("http://{0}:{1}/api/images/{2}", serverIp, serverPort, imageId));
-            this.webClient.DownloadFileAsync(imageUri, "DownloadedNEWImage.jpg", isNotificationNeeded);
+            this.webClient.DownloadFileCompleted += this.FileDownloadCompleteintermediate;
+            var imageUri = new Uri(string.Format("http://{0}:{1}/api/intermediate/{2}", serverIp, serverPort, imageId));
+            this.webClient.DownloadFileAsync(imageUri, string.Format("{0}_intermediate{1}", imageId, serverExtension), isNotificationNeeded);
 
 
+            //imageUri = new Uri(string.Format("http://{0}:{1}/api/images/{2}", serverIp, serverPort, imageId));
+            //this.webClient.DownloadFileAsync(imageUri, string.Format("DownloadedNEWImage{0}", serverExtension), isNotificationNeeded);
+
+          /*  image = Image.FromFile(string.Format("DownloadedNEWImage{0}", serverExtension));
+            pictureBox1.Width = image.Width;
+            pictureBox1.Height = image.Height;
+            pictureBox1.Image = image;*/
 
 
-            pictureBox1.Image = null;
+            /*pictureBox1.Image = null;
             label1.Text = string.Format("Connected to server at {0}:{1}{2}", serverIp, serverPort, Environment.NewLine);
             buttonyes.Visible = false;
             buttonno.Visible = false;
             this.WindowState = FormWindowState.Minimized;
-            this.ShowInTaskbar = false;
+            this.ShowInTaskbar = false;*/
             //System.IO.File.Delete("DownloadedImage.jpg");
             //notifyIcon1.Visible = true;
             //this.Hide();
@@ -252,6 +298,9 @@
             label1.Text = string.Format("Connected to server at {0}:{1}{2}", serverIp, serverPort, Environment.NewLine);
             buttonyes.Visible = false;
             buttonno.Visible = false;
+            buttonyes1.Visible = false;
+            buttonno1.Visible = false;
+            buttonminimum.Visible = false;
             this.WindowState = FormWindowState.Minimized;
             this.ShowInTaskbar = false;
             //System.IO.File.Delete("DownloadedImage.jpg");
@@ -259,6 +308,24 @@
             //this.Hide();
 
 
+        }
+
+        private void buttonyes1_Click(object sender, EventArgs e)
+        {
+            const bool isNotificationNeeded = false;
+            this.webClient.DownloadFileCompleted += this.FileDownloadCompleteimage;
+            var imageUri = new Uri(string.Format("http://{0}:{1}/api/images/{2}", serverIp, serverPort, imageId));
+            this.webClient.DownloadFileAsync(imageUri, string.Format("DownloadedNEWImage{0}", serverExtension), isNotificationNeeded);
+        }
+
+        private void buttonno1_Click(object sender, EventArgs e)
+        {
+            buttonno_Click(sender, e);
+        }
+
+        private void buttonminimum_Click(object sender, EventArgs e)
+        {
+            buttonno_Click(sender, e);
         }
     }
 }

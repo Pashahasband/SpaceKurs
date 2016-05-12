@@ -14,5 +14,7 @@
         public string ImagePath { get; set; }
 
         public string PreviewPath { get; set; }
+
+        public string IntermediatePath { get; set; }
     }
 }

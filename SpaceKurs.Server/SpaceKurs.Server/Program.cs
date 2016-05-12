@@ -69,9 +69,14 @@
             var addedImages = ImageRegistry.Update(Directory.GetFiles(DirPath));
             foreach (var addedImage in addedImages)
             {
-                var previewPath = ImageDecoderService.EncodeImage(addedImage.ImagePath);
+                var intermediatePath = ImageDecoderService.EncodeIntermediateImage(addedImage.ImagePath);
+                addedImage.IntermediatePath = intermediatePath;
+                addedImage.Extension = Path.GetExtension(intermediatePath);
+
+                var previewPath = ImageDecoderService.EncodeImage(addedImage.IntermediatePath);
                 addedImage.PreviewPath = previewPath;
                 addedImage.Extension = Path.GetExtension(previewPath);
+
                 BroadcastService.SendNewImageNotification(addedImage.Id, addedImage.Extension);
             }
         }

@@ -97,6 +97,8 @@
             double sqrt_3 = Math.Sqrt(3);
             double denom = 4 * Math.Sqrt(2);
 
+            
+
             //
             // forward transform scaling (smoothing) coefficients
             //
@@ -126,12 +128,14 @@
             Marshal.Copy(ptr, rgbValues, 0, numBytes);
 
 
+            //разбираем картинку на 3 матрицы ргб
             for (int counter = 0; counter < bmp.Width * bmp.Height; counter += 1)
             {
                 rValues[counter] = rgbValues[counter * 3];
                 gValues[counter] = rgbValues[counter * 3 + 1];
                 bValues[counter] = rgbValues[counter * 3 + 2];
             }
+            //нахождение ближайшей степени 2ки для ширины
             for (int i = 0; i < 15; i++)
             {
                 if (bmp.Width <= Math.Pow(2, i))
@@ -140,6 +144,7 @@
                     break;
                 }
             }
+            //нахождение ближайшей степени 2ки для высоты
             for (int i = 0; i < 15; i++)
             {
                 if (bmp.Height <= Math.Pow(2, i))
@@ -153,49 +158,167 @@
             double[] gValuesk = new double[kWidth * kHeight];
             double[] bValuesk = new double[kWidth * kHeight];
 
-            for (int Height = 0; Height < kHeight; Height += 1)
+            double[,] masrk = new double[kHeight, kWidth];
+            double[,] masgk = new double[kHeight, kWidth];
+            double[,] masbk = new double[kHeight, kWidth];
+
+            double[,] masrkk = new double[bmp.Height, bmp.Width];
+            double[,] masgkk = new double[bmp.Height, bmp.Width];
+            double[,] masbkk = new double[bmp.Height, bmp.Width];
+            //преобразование размера к степени 2ки
+            for (int h = 0; h < kHeight; h++)
             {
-                for (int Width = 0; Width < kWidth; Width += 1)
+                for (int w = 0; w < kWidth; w++)
                 {
-                    if ((Width < bmp.Width) && (Height < bmp.Height))
+                    if ((w < bmp.Width) && (h < bmp.Height))
                     {
-                        rValuesk[(Width + (Height * kWidth))] = rValues[(Width + (Height * bmp.Width))];
-                        gValuesk[(Width + (Height * kWidth))] = gValues[(Width + (Height * bmp.Width))];
-                        bValuesk[(Width + (Height * kWidth))] = bValues[(Width + (Height * bmp.Width))];
+                        masrk[h, w] = rValuesk[(w + (h * kWidth))] = rValues[(w + (h * bmp.Width))];
+                        masgk[h, w] = gValuesk[(w + (h * kWidth))] = gValues[(w + (h * bmp.Width))];
+                        masbk[h, w] = bValuesk[(w + (h * kWidth))] = bValues[(w + (h * bmp.Width))];
                     }
                     else
                     {
-                        rValuesk[(Width + (Height * kWidth))] = 0;
-                        gValuesk[(Width + (Height * kWidth))] = 0;
-                        bValuesk[(Width + (Height * kWidth))] = 0;
+                        masrk[h, w] = rValuesk[(w + (h * kWidth))] = 0;
+                        masgk[h, w] = gValuesk[(w + (h * kWidth))] = 0;
+                        masbk[h, w] = bValuesk[(w + (h * kWidth))] = 0;
                     }
                 }
             }
 
 
-            for (int n = kWidth * kHeight; n >= 4; n >>= 1)
+            double[] rValueskk = new double[kWidth];
+            double[] gValueskk = new double[kWidth];
+            double[] bValueskk = new double[kWidth];
+            double[] rValueskkk = new double[kHeight];
+            double[] gValueskkk = new double[kHeight];
+            double[] bValueskkk = new double[kHeight];
+            //Прямое преобразование Добеши
+            // Применить преобразование к строкам...
+            for (int i = 0; i < kHeight; i++)
             {
-                TransformDobes(ref rValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
-                TransformDobes(ref gValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
-                TransformDobes(ref bValuesk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                for (int j = 0; j < kWidth; j++)
+                {
+                    rValueskk[j] = masrk[i, j];
+                    gValueskk[j] = masgk[i, j];
+                    bValueskk[j] = masbk[i, j];
+                }
+
+                for (int n = kWidth; n >= 4; n >>= 1)
+                {
+                    TransformDobes(ref rValueskk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                    TransformDobes(ref gValueskk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                    TransformDobes(ref bValueskk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                }
+
+                for (int j = 0; j < kWidth; j++)
+                {
+                    masrk[i, j] = rValueskk[j];
+                    masgk[i, j] = gValueskk[j];
+                    masbk[i, j] = bValueskk[j];
+                    rValueskk[j] = 0;
+                    gValueskk[j] = 0;
+                    bValueskk[j] = 0;
+                }
+            }
+            // ...и столбцам.
+            for (int i = 0; i < kWidth; i++)
+            {
+                for (int j = 0; j < kHeight; j++)
+                {
+                    rValueskkk[j] = masrk[j, i];
+                    gValueskkk[j] = masgk[j, i];
+                    bValueskkk[j] = masbk[j, i];
+                }
+
+                for (int n = kHeight; n >= 4; n >>= 1)
+                {
+                    TransformDobes(ref rValueskkk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                    TransformDobes(ref gValueskkk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                    TransformDobes(ref bValueskkk, n, h0, h1, h2, h3, g0, g1, g2, g3);
+                }
+
+                for (int j = 0; j < kHeight; j++)
+                {
+                    masrk[j, i] = rValueskkk[j];
+                    masgk[j, i] = gValueskkk[j];
+                    masbk[j, i] = bValueskkk[j];
+                    rValueskk[j] = 0;
+                    gValueskk[j] = 0;
+                    bValueskk[j] = 0;
+                }
             }
 
-            for (int counter = 0; counter < kWidth * kHeight; counter += 1)
+            //Провекра коэффициентов
+            for (int i = 0; i < kHeight; i++)
             {
-                if (Math.Abs(rValuesk[counter]) < 0.05)
-                    rValuesk[counter] = 0;
-                if (Math.Abs(gValuesk[counter]) < 0.05)
-                    gValuesk[counter] = 0;
-                if (Math.Abs(bValuesk[counter]) < 0.05)
-                    bValuesk[counter] = 0;
+                for (int j = 0; j < kWidth; j++)
+                {
+                    if (Math.Abs(masrk[i, j]) < 0.5)
+                        masrk[i, j] = 0;
+                    if (Math.Abs(masgk[i, j]) < 0.5)
+                        masgk[i, j] = 0;
+                    if (Math.Abs(masbk[i, j]) < 0.5)
+                        masbk[i, j] = 0;
+                }
             }
 
-            for (int n = 4; n <= kWidth * kHeight; n <<= 1)
+            //Обратное преобразование Добеши
+            // Применить преобразование к строкам...
+            for (int i = 0; i < kHeight; i++)
             {
-                InvTransformDobes(ref rValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
-                InvTransformDobes(ref gValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
-                InvTransformDobes(ref bValuesk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                for (int j = 0; j < kWidth; j++)
+                {
+                    rValueskk[j] = masrk[i, j];
+                    gValueskk[j] = masgk[i, j];
+                    bValueskk[j] = masbk[i, j];
+                }
+                for (int n = 4; n <= kWidth; n <<= 1)
+                {
+                    InvTransformDobes(ref rValueskk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                    InvTransformDobes(ref gValueskk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                    InvTransformDobes(ref bValueskk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                }
+
+                for (int j = 0; j < kWidth; j++)
+                {
+                    masrk[i, j] = rValueskk[j];
+                    masgk[i, j] = gValueskk[j];
+                    masbk[i, j] = bValueskk[j];
+                    rValueskk[j] = 0;
+                    gValueskk[j] = 0;
+                    bValueskk[j] = 0;
+                }
             }
+            // ...и столбцам.
+            for (int i = 0; i < kWidth; i++)
+            {
+                for (int j = 0; j < kHeight; j++)
+                {
+                    rValueskkk[j] = masrk[j, i];
+                    gValueskkk[j] = masgk[j, i];
+                    bValueskkk[j] = masbk[j, i];
+                }
+
+                for (int n = 4; n <= kHeight; n <<= 1)
+                {
+                    InvTransformDobes(ref rValueskkk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                    InvTransformDobes(ref gValueskkk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                    InvTransformDobes(ref bValueskkk, n, Ih0, Ih1, Ih2, Ih3, Ig0, Ig1, Ig2, Ig3);
+                }
+
+                for (int j = 0; j < kHeight; j++)
+                {
+                    masrk[j, i] = rValueskkk[j];
+                    masgk[j, i] = gValueskkk[j];
+                    masbk[j, i] = bValueskkk[j];
+                    rValueskk[j] = 0;
+                    gValueskk[j] = 0;
+                    bValueskk[j] = 0;
+                }
+            }
+            double[,] masrkkk = new double[bmp.Height, bmp.Width];
+            double[,] masgkkk = new double[bmp.Height, bmp.Width];
+            double[,] masbkkk = new double[bmp.Height, bmp.Width];
 
             for (int Height = 0; Height < kHeight; Height += 1)
             {
@@ -203,14 +326,87 @@
                 {
                     if ((Width < bmp.Width) && (Height < bmp.Height))
                     {
-                        rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))];
-                        gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))];
-                        bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))];
+                        masrkkk[Height, Width] = masrk[Height, Width];
+                        masgkkk[Height, Width] = masgk[Height, Width];
+                        masbkkk[Height, Width] = masbk[Height, Width];
+                    }
+                }
+            }
+            //Дибильный переворот изображения
+            for (int i = 0; i < bmp.Height / 2; i++)
+            {
+                for (int j = 0; j < bmp.Width / 2; j++)
+                {
+                    masrkk[i, j] = masrkkk[i * 2, j * 2];
+                    masgkk[i, j] = masgkkk[i * 2, j * 2];
+                    masbkk[i, j] = masbkkk[i * 2, j * 2];
+                }
+            }
+            /*
+            for (int i = kHeight / 2; i < kHeight; i++)
+            {
+                for (int j = 0; j < kWidth / 2; j++)
+                {
+                    masrkk[i, j] = masrk[(i - kHeight / 2) * 2 + 1, j * 2];
+                    masgkk[i, j] = masgk[(i - kHeight / 2) * 2 + 1, j * 2];
+                    masbkk[i, j] = masbk[(i - kHeight / 2) * 2 + 1, j * 2];
+                }
+            }
+
+            for (int i = 0; i < kHeight / 2; i++)
+            {
+                for (int j = kWidth / 2; j < kWidth; j++)
+                {
+                    masrkk[i, j] = masrk[i * 2, (j - kWidth / 2) * 2 + 1];
+                    masgkk[i, j] = masgk[i * 2, (j - kWidth / 2) * 2 + 1];
+                    masbkk[i, j] = masbk[i * 2, (j - kWidth / 2) * 2 + 1];
+                }
+            }
+            for (int i = kHeight / 2; i < kHeight; i++)
+            {
+                for (int j = kWidth / 2; j < kWidth; j++)
+                {
+                    masrkk[i, j] = masrk[(i - kHeight / 2) * 2 + 1, (j - kWidth / 2) * 2 + 1];
+                    masgkk[i, j] = masgk[(i - kHeight / 2) * 2 + 1, (j - kWidth / 2) * 2 + 1];
+                    masbkk[i, j] = masbk[(i - kHeight / 2) * 2 + 1, (j - kWidth / 2) * 2 + 1];
+                }
+            }*/
+            //конец дибильного переворота
+            //преобразование к исходному размеру
+            for (int Height = 0; Height < kHeight; Height += 1)
+            {
+                for (int Width = 0; Width < kWidth; Width += 1)
+                {
+                    if ((Width < bmp.Width) && (Height < bmp.Height))
+                    {
+                        if (masrkk[Height, Width] > 0)
+                            if (masrkk[Height, Width] < 255)
+                                rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] = masrkk[Height, Width];
+                            else
+                                rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] = 255;
+                        else
+                            rValues[(Width + (Height * bmp.Width))] = rValuesk[(Width + (Height * kWidth))] = 0;
+                        if (masgkk[Height, Width] > 0)
+                            if (masgkk[Height, Width] < 255)
+                                gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] = masgkk[Height, Width];
+                            else
+                                gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] = 255;
+                        else
+                            gValues[(Width + (Height * bmp.Width))] = gValuesk[(Width + (Height * kWidth))] = 0;
+                        if (masbkk[Height, Width] > 0)
+                            if (masbkk[Height, Width] < 255)
+                                bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))] = masbkk[Height, Width];
+                            else
+                                bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))] = 255;
+                        else
+                            bValues[(Width + (Height * bmp.Width))] = bValuesk[(Width + (Height * kWidth))] = 0;
                     }
 
                 }
             }
+            //конец преобразования
 
+            //сборка в единое ргб изображение
             for (int counter = 0; counter < bmp.Width * bmp.Height; counter += 1)
             {
                 rgbValues[counter * 3] = Convert.ToByte(rValues[counter]);
