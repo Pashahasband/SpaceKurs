@@ -42,14 +42,37 @@ namespace TestImageGray
                 label1.Text = label1.Text + DateTime.Now.Second.ToString() + "." + DateTime.Now.Millisecond.ToString() + " - "; //Время начала обработки (секунды и миллисекунды).
                 //Преобразуем картинку
                 MakeGray(bmp);
+                //Crop(bmp, new Rectangle(0, 0, bmp.Height, bmp.Width));
+                Bitmap cropBmp = bmp.Clone(new Rectangle(0, 0, bmp.Width / 2, bmp.Height / 2), bmp.PixelFormat);
                 label1.Text = label1.Text + DateTime.Now.Second.ToString() + "." + DateTime.Now.Millisecond.ToString(); //Время окончания обработки (секунды и миллисекунды).
                 //Помещаем преобразованное изображение в PictureBox2
-                pictureBox2.Image = bmp;
-                
+                pictureBox2.Image = cropBmp;
+                Bitmap cropcloneBmp = cropBmp.Clone(new Rectangle(0, 0, cropBmp.Width, cropBmp.Height), cropBmp.PixelFormat);
+                MakeGray(cropcloneBmp);
+                //Crop(bmp, new Rectangle(0, 0, bmp.Height, bmp.Width));
+                Bitmap cropnewBmp = cropcloneBmp.Clone(new Rectangle(0, 0, cropcloneBmp.Width / 2, cropcloneBmp.Height / 2), cropcloneBmp.PixelFormat);
+                label1.Text = label1.Text + DateTime.Now.Second.ToString() + "." + DateTime.Now.Millisecond.ToString(); //Время окончания обработки (секунды и миллисекунды).
+                //Помещаем преобразованное изображение в PictureBox2
+                pictureBox3.Image = cropnewBmp;
             }
 
         }
+       /* public static Image Crop(this Image image, Rectangle selection)
+        {
+            Bitmap bmp = image as Bitmap;
 
+            // Check if it is a bitmap:
+            if (bmp == null)
+                throw new ArgumentException("No valid bitmap");
+
+            // Crop the image:
+            Bitmap cropBmp = bmp.Clone(selection, bmp.PixelFormat);
+
+            // Release the resources:
+            image.Dispose();
+
+            return cropBmp;
+        }*/
    static void transformDobes(ref double[] a, int n )
    {
       if (n >= 4) {
