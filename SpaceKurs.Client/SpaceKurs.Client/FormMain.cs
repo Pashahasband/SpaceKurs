@@ -63,7 +63,8 @@
                         this.webClient.DownloadFileCompleted += this.FileDownloadComplete;
                         var imageUri = new Uri(string.Format("http://{0}:{1}/api/previews/{2}", IP, PORT, id));
                         //this.webClient.DownloadFileAsync(imageUri, string.Format("{0}.jpg", id));  //{1}", id,typeimage);
-                        this.webClient.DownloadFileAsync(imageUri, string.Format("{0}{1}", id, extension));  //{1}", id,typeimage);
+                        const bool isNotificationNeeded = true;
+                        this.webClient.DownloadFileAsync(imageUri, string.Format("{0}{1}", id, extension), isNotificationNeeded);  //{1}", id,typeimage);
 
                     })));
             try
@@ -199,10 +200,14 @@
             //Помещаем исходное изображение в PictureBox1
             pictureBox1.Image = image;
 
-            label1.Text = "Появилось новое изображение, хотите ли вы скачать его себе на ПК?";
-            buttonyes.Visible = true;
-            buttonno.Visible = true;
-            notifyIcon1_Click(sender, e);
+            var isNotificationNeeded = (bool)e.UserState;
+            if (isNotificationNeeded)
+            {
+                this.label1.Text = "Появилось новое изображение, хотите ли вы скачать его себе на ПК?";
+                this.buttonyes.Visible = true;
+                this.buttonno.Visible = true;
+                this.notifyIcon1_Click(sender, e);
+            }
             //MessageBox.Show("Download comleted");
         }
 
@@ -218,11 +223,12 @@
 
         private void buttonyes_Click(object sender, EventArgs e)
         {
+            const bool isNotificationNeeded = false;
 
             //this.webClient.DownloadFileCompleted += this.FileDownloadComplete;
             // pictureBox1 = webClient.Get("http://" + IP + ":" + PORT + "/api/images");
             var imageUri = new Uri(string.Format("http://{0}:{1}/api/images/{2}", serverIp, serverPort, imageId));
-            this.webClient.DownloadFileAsync(imageUri, "DownloadedNEWImage.jpg");
+            this.webClient.DownloadFileAsync(imageUri, "DownloadedNEWImage.jpg", isNotificationNeeded);
 
 
 
